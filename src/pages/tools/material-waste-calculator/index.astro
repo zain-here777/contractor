@@ -1,0 +1,29 @@
+---
+import ToolPage from "../../../components/tools/ToolPage.astro";
+import MaterialWasteCalculator from "../../../components/tools/MaterialWasteCalculator.astro";
+import { relatedToolsExcept } from "../../../lib/tools/related-links";
+
+const toolPath = "/tools/material-waste-calculator/";
+---
+
+<ToolPage
+  title="Material waste calculator"
+  description="Add a waste factor to net material quantity so you order enough."
+  toolPath={toolPath}
+  relatedTools={relatedToolsExcept(toolPath)}
+>
+  <div slot="intro">
+    <p>
+      Measure what the job needs, then add waste for cuts, damage, or pattern overlap. Use the same unit
+      throughout (square feet, linear feet, pieces, etc.).
+    </p>
+    <p>TODO(user): add typical waste percentages you use by material type.</p>
+  </div>
+  <MaterialWasteCalculator slot="calculator" />
+  <div slot="formula">
+    <p>Quantity to order = net quantity × (1 + waste percent ÷ 100)</p>
+  </div>
+  <div slot="example">
+    <p>100 units needed with 10% waste → order 110 units (10 extra).</p>
+  </div>
+</ToolPage>

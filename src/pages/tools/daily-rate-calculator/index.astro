@@ -1,0 +1,28 @@
+---
+import ToolPage from "../../../components/tools/ToolPage.astro";
+import DailyRateCalculator from "../../../components/tools/DailyRateCalculator.astro";
+import { relatedToolsExcept } from "../../../lib/tools/related-links";
+
+const toolPath = "/tools/daily-rate-calculator/";
+---
+
+<ToolPage
+  title="Daily rate calculator"
+  description="Convert an hourly rate to a day rate using billable hours per day."
+  toolPath={toolPath}
+  relatedTools={relatedToolsExcept(toolPath)}
+>
+  <div slot="intro">
+    <p>
+      Useful for time-and-materials quotes or internal targets when you think in full field days instead
+      of hours.
+    </p>
+  </div>
+  <DailyRateCalculator slot="calculator" />
+  <div slot="formula">
+    <p>Day rate = hourly rate × billable hours per day</p>
+  </div>
+  <div slot="example">
+    <p>$116.67 per hour × 8 billable hours → about $933.36 per day.</p>
+  </div>
+</ToolPage>

@@ -38,10 +38,28 @@ const organizationJsonLd = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        try {
+          const key = "site-theme";
+          const stored = localStorage.getItem(key);
+          const theme =
+            stored === "dark" || stored === "light"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
     {
       stagingNoindex && (
         <meta
@@ -90,5 +108,9 @@ const organizationJsonLd = {
     </main>
 
     <SiteFooter />
+    <script>
+      import { bindThemeToggle } from "../scripts/theme.ts";
+      bindThemeToggle();
+    </script>
   </body>
 </html>

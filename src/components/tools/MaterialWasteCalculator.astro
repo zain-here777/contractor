@@ -1,0 +1,115 @@
+---
+import ToolFormActions from "./ToolFormActions.astro";
+import ToolResult from "./ToolResult.astro";
+---
+
+<div class="tool-workspace">
+  <div class="tool-workspace__inputs">
+    <form id="material-waste-form" class="tool-form">
+      <fieldset class="tool-form__fieldset">
+        <legend class="tool-form__legend">Material order</legend>
+        <p class="tool-form__hint">
+          Add a waste factor for cuts, breakage, or overlap. Enter waste as a percent (10 means 10%).
+        </p>
+        <label class="field-label">
+          Net quantity needed
+          <input
+            class="field"
+            name="netQuantity"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="100"
+            required
+          />
+          <span class="field-hint">Units after measuring the job (same unit for order and waste).</span>
+        </label>
+        <label class="field-label">
+          Waste allowance (%)
+          <input
+            class="field"
+            name="wastePct"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="10"
+            required
+          />
+          <span class="field-hint">Common ranges are 5–15% depending on material and trade.</span>
+        </label>
+      </fieldset>
+      <ToolFormActions />
+    </form>
+  </div>
+  <div class="tool-workspace__output">
+    <p class="result-panel__heading">Result</p>
+    <ToolResult id="material-waste-result" />
+  </div>
+</div>
+
+<script>
+  import { calculateMaterialWaste } from "../../lib/calculators/material-waste.ts";
+  import { parsePercentInputToDecimal } from "../../lib/calculators/display.ts";
+  import {
+    bindExampleFill,
+    bindResetToolForm,
+    bindSubmitToolForm,
+    getFormNumber,
+    renderMetricGridHtml,
+    renderResultPanel,
+  } from "./tool-form-client.ts";
+
+  const form = document.getElementById("material-waste-form");
+  const result = document.getElementById("material-waste-result");
+
+  function runMaterialWaste(formEl: HTMLFormElement, panel: HTMLElement): void {
+    const wastePct = getFormNumber(formEl, "wastePct");
+    if (wastePct === null) {
+      renderResultPanel(panel, {
+        type: "error",
+        message: "Enter a valid waste percent.",
+      });
+      return;
+    }
+
+    const calc = calculateMaterialWaste(
+      getFormNumber(formEl, "netQuantity") ?? NaN,
+      parsePercentInputToDecimal(wastePct),
+    );
+
+    if (!calc.ok) {
+      renderResultPanel(panel, { type: "error", message: calc.error });
+      return;
+    }
+
+    const orderFormatted = calc.value.orderQuantity.toLocaleString("en-US", {
+      maximumFractionDigits: 2,
+    });
+    const wasteFormatted = calc.value.wasteAmount.toLocaleString("en-US", {
+      maximumFractionDigits: 2,
+    });
+
+    renderResultPanel(panel, {
+      type: "result",
+      html: renderMetricGridHtml([
+        {
+          label: "Quantity to order",
+          value: orderFormatted,
+          primary: true,
+        },
+        { label: "Extra for waste", value: wasteFormatted },
+      ]),
+    });
+  }
+
+  if (form instanceof HTMLFormElement && result instanceof HTMLElement) {
+    bindSubmitToolForm(form, result, runMaterialWaste);
+    bindResetToolForm(form, result, form.querySelector("[data-tool-reset]"));
+    bindExampleFill(form, form.querySelector("[data-tool-example]"), {
+      netQuantity: "100",
+      wastePct: "10",
+    });
+  }
+</script>

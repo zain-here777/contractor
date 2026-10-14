@@ -1,0 +1,97 @@
+---
+/** Basic four-function calculator for quick on-site math. */
+const keys: {
+  label: string;
+  key: string;
+  wide?: boolean;
+  accent?: boolean;
+  operator?: boolean;
+}[] = [
+  { label: "Clear", key: "C" },
+  { label: "⌫", key: "backspace" },
+  { label: "%", key: "%", operator: true },
+  { label: "÷", key: "/", operator: true },
+  { label: "7", key: "7" },
+  { label: "8", key: "8" },
+  { label: "9", key: "9" },
+  { label: "×", key: "*", operator: true },
+  { label: "4", key: "4" },
+  { label: "5", key: "5" },
+  { label: "6", key: "6" },
+  { label: "−", key: "-", operator: true },
+  { label: "1", key: "1" },
+  { label: "2", key: "2" },
+  { label: "3", key: "3" },
+  { label: "+", key: "+", operator: true },
+  { label: "0", key: "0", wide: true },
+  { label: ".", key: "." },
+  { label: "=", key: "=", accent: true },
+];
+---
+
+<div
+  id="simple-calculator"
+  class="calc-shell"
+  tabindex="0"
+  aria-label="Simple calculator. Use the keypad or your keyboard."
+>
+  <div class="calc-display-panel">
+    <div class="calc-display-block">
+      <span class="calc-display-panel__label">Calculation</span>
+      <output
+        class="calc-expression"
+        data-calc-expression
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        Enter the first number, then tap + − × or ÷.
+      </output>
+    </div>
+    <div class="calc-display-block calc-display-block--result">
+      <span class="calc-display-panel__label">Result</span>
+      <output
+        id="simple-calc-result"
+        class="calc-display"
+        data-calc-display
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        0
+      </output>
+    </div>
+  </div>
+  <div class="calc-keypad" role="group" aria-label="Calculator keys">
+    {
+      keys.map((item) => (
+        <button
+          type="button"
+          class:list={[
+            "calc-key",
+            item.wide && "calc-key--wide",
+            item.accent && "calc-key--accent",
+            item.operator && "calc-key--operator",
+          ]}
+          data-calc-key={item.key}
+          data-calc-op={item.operator ? item.key : undefined}
+          aria-pressed={item.operator ? "false" : undefined}
+        >
+          {item.label}
+        </button>
+      ))
+    }
+  </div>
+  <p class="calc-hint">
+    Tap the keypad or type on your keyboard. <strong>%</strong> turns a lone number into a decimal
+    (25 → 0.25) or finds a percent of the first number after + − × ÷ (e.g. 1,000 + 10% then =).
+    <strong>Clear</strong> resets everything.
+  </p>
+</div>
+
+<script>
+  import { initSimpleCalculator } from "./simple-calculator.client.ts";
+
+  const root = document.getElementById("simple-calculator");
+  if (root instanceof HTMLElement) {
+    initSimpleCalculator(root);
+  }
+</script>

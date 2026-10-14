@@ -1,0 +1,103 @@
+---
+import ToolFormActions from "./ToolFormActions.astro";
+import ToolResult from "./ToolResult.astro";
+---
+
+<div class="tool-workspace">
+  <div class="tool-workspace__inputs">
+    <form id="job-profit-form" class="tool-form">
+      <fieldset class="tool-form__fieldset">
+        <legend class="tool-form__legend">Quoted job</legend>
+        <p class="tool-form__hint">
+          Use the price you quoted the customer and your total cost to do the work.
+        </p>
+        <label class="field-label">
+          Job price (USD)
+          <input
+            class="field"
+            name="jobPrice"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="1250"
+            required
+          />
+          <span class="field-hint">What the customer pays (labor, materials, and markup included).</span>
+        </label>
+        <label class="field-label">
+          Job cost (USD)
+          <input
+            class="field"
+            name="jobCost"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="1000"
+            required
+          />
+          <span class="field-hint">Your direct cost before profit on this job.</span>
+        </label>
+      </fieldset>
+      <ToolFormActions />
+    </form>
+  </div>
+  <div class="tool-workspace__output">
+    <p class="result-panel__heading">Result</p>
+    <ToolResult id="job-profit-result" />
+  </div>
+</div>
+
+<script>
+  import { calculateJobProfit } from "../../lib/calculators/job-profit.ts";
+  import {
+    formatPercentFromDecimal,
+    formatUsd,
+  } from "../../lib/calculators/display.ts";
+  import {
+    bindExampleFill,
+    bindResetToolForm,
+    bindSubmitToolForm,
+    getFormNumber,
+    renderMetricGridHtml,
+    renderResultPanel,
+  } from "./tool-form-client.ts";
+
+  const form = document.getElementById("job-profit-form");
+  const result = document.getElementById("job-profit-result");
+
+  function runJobProfit(formEl: HTMLFormElement, panel: HTMLElement): void {
+    const calc = calculateJobProfit(
+      getFormNumber(formEl, "jobPrice") ?? NaN,
+      getFormNumber(formEl, "jobCost") ?? NaN,
+    );
+
+    if (!calc.ok) {
+      renderResultPanel(panel, { type: "error", message: calc.error });
+      return;
+    }
+
+    renderResultPanel(panel, {
+      type: "result",
+      html: renderMetricGridHtml([
+        {
+          label: "Profit on this job",
+          value: formatUsd(calc.value.profit),
+          primary: true,
+        },
+        { label: "Margin", value: formatPercentFromDecimal(calc.value.margin) },
+        { label: "Markup on cost", value: formatPercentFromDecimal(calc.value.markup) },
+      ]),
+    });
+  }
+
+  if (form instanceof HTMLFormElement && result instanceof HTMLElement) {
+    bindSubmitToolForm(form, result, runJobProfit);
+    bindResetToolForm(form, result, form.querySelector("[data-tool-reset]"));
+    bindExampleFill(form, form.querySelector("[data-tool-example]"), {
+      jobPrice: "1250",
+      jobCost: "1000",
+    });
+  }
+</script>

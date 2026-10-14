@@ -19,6 +19,8 @@
   --color-ok-ink: #14532d;
   --color-error-bg: #fdecec;
   --color-error-border: #b02a2a;
+  --color-inverse-bg: #1b2430;
+  --color-inverse-fg: #ffffff;
 
   --font-sans:
     "Google Sans Flex Variable", system-ui, -apple-system, "Segoe UI",
@@ -32,6 +34,30 @@
 
   /** Set when live ads are enabled to reserve space and limit layout shift. */
   --spacing-ad-slot: 0;
+}
+
+html[data-theme="dark"] {
+  --color-ink: #e8edf3;
+  --color-muted: #a3adb8;
+  --color-bg: #111820;
+  --color-surface: #1a222d;
+  --color-border: #2d3744;
+  --color-border-strong: #5a6573;
+  --color-accent: #7eb3f5;
+  --color-accent-hover: #a5c9fa;
+  --color-accent-subtle: #1e2d42;
+  --color-header-bg: #111820;
+  --color-footer-bg: #1a222d;
+  --color-warn-bg: #3d3018;
+  --color-warn-ink: #f5d998;
+  --color-ok-bg: #1a3324;
+  --color-ok-ink: #9ed4ad;
+  --color-error-bg: #3a1f1f;
+  --color-error-border: #e08a8a;
+  --color-inverse-bg: #e8edf3;
+  --color-inverse-fg: #111820;
+
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.35);
 }
 
 @layer base {
@@ -48,6 +74,7 @@
     color: var(--color-ink);
     background: var(--color-bg);
     font-family: var(--font-sans);
+    color-scheme: light dark;
   }
 
   body {
@@ -105,6 +132,14 @@
     @apply bg-surface text-ink;
   }
 
+  .btn-ghost {
+    @apply border border-transparent bg-transparent px-4 text-accent underline-offset-2;
+  }
+
+  .btn-ghost:hover {
+    @apply bg-surface text-accent-hover underline;
+  }
+
   .btn--icon {
     @apply inline-flex items-center gap-2;
   }
@@ -114,11 +149,15 @@
   }
 
   .btn-pill-solid {
-    @apply rounded-full border border-ink bg-ink px-6 text-white;
+    @apply rounded-full border px-6;
+    border-color: var(--color-inverse-bg);
+    background: var(--color-inverse-bg);
+    color: var(--color-inverse-fg);
   }
 
   .btn-pill-solid:hover {
-    @apply border-ink bg-ink text-white opacity-90;
+    @apply opacity-90;
+    color: var(--color-inverse-fg);
   }
 
   .btn-pill-outline {
@@ -477,6 +516,17 @@
     font: inherit;
   }
 
+  .field[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  .field[type="number"]::-webkit-inner-spin-button,
+  .field[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   .field-error {
     @apply mt-1 text-sm text-ink;
   }
@@ -487,9 +537,18 @@
   }
 
   .result-panel {
-    @apply mt-4 rounded-[var(--radius-card)] border border-border bg-bg p-4;
+    @apply rounded-[var(--radius-card)] border border-border bg-bg p-4;
     border-left-width: 4px;
     border-left-color: var(--color-accent);
+  }
+
+  .result-panel--placeholder {
+    @apply border-dashed border-border-strong bg-surface/60;
+    border-left-color: var(--color-border-strong);
+  }
+
+  .result-panel__hint {
+    @apply m-0 text-sm leading-relaxed text-muted;
   }
 
   .result-panel--error {
@@ -504,8 +563,96 @@
     border-color: var(--color-warn-ink);
   }
 
+  .result-panel--success {
+    border-left-color: var(--color-ok-ink);
+    background: var(--color-ok-bg);
+    border-color: var(--color-ok-ink);
+  }
+
   .result-panel ul {
     @apply m-0 list-disc pl-5;
+  }
+
+  .tool-metric-grid {
+    @apply grid gap-3;
+  }
+
+  .tool-metric {
+    @apply flex flex-col gap-0.5 rounded-[var(--radius-card)] border border-border bg-surface/50 px-3 py-2;
+  }
+
+  .tool-metric--primary {
+    @apply border-accent/30 bg-surface px-4 py-3;
+  }
+
+  .tool-metric__label {
+    @apply text-sm font-medium text-muted;
+  }
+
+  .tool-metric__value {
+    @apply text-lg font-semibold tabular-nums text-ink;
+  }
+
+  .tool-metric--primary .tool-metric__value {
+    @apply text-2xl font-semibold text-ink md:text-3xl;
+  }
+
+  .tool-outcome-headline {
+    @apply mt-0 mb-3 text-lg font-semibold text-ink;
+  }
+
+  .field-hint {
+    @apply mt-1 block text-sm font-normal leading-snug text-muted;
+  }
+
+  .segmented-control {
+    @apply mt-1 flex flex-wrap gap-2;
+  }
+
+  .segmented-control__option {
+    @apply relative flex-1;
+    min-width: 8rem;
+  }
+
+  .segmented-control__input {
+    @apply sr-only;
+  }
+
+  .segmented-control__label {
+    @apply flex min-h-11 cursor-pointer items-center justify-center rounded-[var(--radius-card)] border border-border-strong bg-bg px-3 py-2 text-center text-sm font-semibold text-ink;
+  }
+
+  .segmented-control__input:checked + .segmented-control__label {
+    @apply border-accent bg-accent text-white;
+  }
+
+  .segmented-control__input:focus-visible + .segmented-control__label {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+
+  .choice-group {
+    @apply mt-1 flex flex-wrap gap-2;
+  }
+
+  .choice-group__option {
+    @apply relative flex-1;
+    min-width: 6rem;
+  }
+
+  .choice-group__input {
+    @apply sr-only;
+  }
+
+  .choice-group__label {
+    @apply flex min-h-11 cursor-pointer items-center justify-center rounded-[var(--radius-card)] border border-border-strong bg-bg px-4 py-2 text-center text-sm font-semibold text-ink;
+  }
+
+  .choice-group__input:checked + .choice-group__label {
+    @apply border-accent bg-surface text-ink ring-2 ring-accent/30;
+  }
+
+  .choice-group__input:focus-visible + .choice-group__label {
+    @apply outline-2 outline-offset-2 outline-accent;
   }
 
   .prose-site {
@@ -611,6 +758,32 @@
 
 .site-header__cta {
   @apply whitespace-nowrap;
+}
+
+.theme-toggle {
+  @apply inline-flex min-h-10 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border border-border bg-bg px-3 py-2 text-sm font-semibold text-ink;
+}
+
+.theme-toggle:hover {
+  @apply bg-surface;
+}
+
+.theme-toggle__icon {
+  @apply h-[1.125rem] w-[1.125rem];
+}
+
+html[data-theme="light"] .theme-toggle__icon--to-light,
+html[data-theme="light"] .theme-toggle__label--to-light {
+  @apply hidden;
+}
+
+html[data-theme="dark"] .theme-toggle__icon--to-dark,
+html[data-theme="dark"] .theme-toggle__label--to-dark {
+  @apply hidden;
+}
+
+.site-nav-drawer__panel .theme-toggle {
+  @apply mb-3 w-full justify-center;
 }
 
 .site-nav--desktop {
@@ -1321,15 +1494,59 @@
 }
 
 .tool-panel.panel {
-  @apply my-0;
+  @apply my-0 w-full max-w-none;
+}
+
+.tool-panel.panel--emphasis .tool-calculator {
+  @apply w-full max-w-none;
 }
 
 .tool-panel--detail {
   @apply border-t-0 pt-0;
 }
 
+.tool-panel__intro {
+  @apply mb-4 max-w-prose-site;
+}
+
+.tool-panel__lead {
+  @apply m-0 mt-1 text-base text-muted;
+}
+
 .tool-calculator {
   @apply grid gap-4;
+}
+
+.tool-workspace {
+  @apply grid gap-6 lg:grid-cols-2 lg:items-start lg:gap-6;
+}
+
+.tool-workspace__inputs {
+  @apply flex min-w-0 w-full flex-col gap-4;
+}
+
+.tool-workspace__inputs .tool-form {
+  @apply w-full;
+}
+
+.tool-workspace__output {
+  @apply flex min-w-0 w-full flex-col lg:sticky lg:top-24;
+}
+
+.tool-workspace__output .result-panel__heading {
+  @apply m-0 mb-2 text-sm font-semibold uppercase tracking-wide text-muted;
+}
+
+.tool-workspace__output .result-panel {
+  @apply w-full flex-1;
+}
+
+.tool-workspace__output .result-panel--placeholder {
+  @apply flex min-h-48 items-center justify-center;
+}
+
+.tool-workspace__output .result-panel--placeholder .result-panel__hint {
+  @apply max-w-xs text-center;
 }
 
 .tool-detail p {
@@ -1337,11 +1554,29 @@
 }
 
 .tool-form {
-  @apply grid gap-4;
+  @apply grid w-full gap-4;
 }
 
 .tool-form__fieldset {
-  @apply m-0 rounded-[var(--radius-card)] border border-border p-4;
+  @apply m-0 grid w-full grid-cols-1 gap-4 rounded-[var(--radius-card)] border border-border bg-surface/30 p-4;
+}
+
+.tool-form__fieldset .field-label {
+  @apply mb-0 grid gap-1;
+}
+
+.tool-form__fieldset .field-label > .field,
+.tool-form__fieldset .field-label .segmented-control,
+.tool-form__fieldset .field-label .choice-group {
+  @apply w-full max-w-none;
+}
+
+.tool-form__fieldset fieldset.field-label {
+  @apply m-0 min-w-0 border-0 p-0;
+}
+
+.tool-form__fieldset fieldset.field-label > span {
+  @apply mb-0 block font-semibold text-ink;
 }
 
 .tool-form__legend {
@@ -1349,11 +1584,19 @@
 }
 
 .tool-form__hint {
-  @apply mb-2 text-sm text-muted;
+  @apply mb-0 text-sm leading-relaxed text-muted;
 }
 
 .tool-form__label--hidden {
   @apply hidden;
+}
+
+.tool-form__actions {
+  @apply flex w-full flex-wrap items-center gap-2;
+}
+
+.tool-workspace .segmented-control {
+  @apply w-full;
 }
 
 .tool-calculator .result-panel ul {
@@ -1361,7 +1604,12 @@
 }
 
 .tool-calculator .result-panel p {
-  @apply m-0;
+  @apply m-0 leading-relaxed;
+}
+
+.tool-calculator .result-panel p + p,
+.tool-calculator .result-panel p + ul {
+  @apply mt-3;
 }
 
 .tool-warnings {
@@ -1378,6 +1626,99 @@
 
 .tool-related-list li {
   @apply mb-2;
+}
+
+.calc-shell {
+  @apply mx-auto w-full max-w-md outline-none;
+}
+
+.calc-shell:focus-visible {
+  @apply rounded-[var(--radius-card)] outline-2 outline-offset-2 outline-accent;
+}
+
+.calc-display-panel {
+  @apply mb-4 rounded-[var(--radius-card)] border border-border-strong bg-bg px-4 py-4;
+  box-shadow: var(--shadow-soft);
+}
+
+.calc-shell--error .calc-display-panel {
+  border-color: var(--color-error-border);
+  background: var(--color-error-bg);
+}
+
+.calc-display-block {
+  @apply text-right;
+}
+
+.calc-display-block--result {
+  @apply mt-4 border-t border-border pt-3;
+}
+
+.calc-display-panel__label {
+  @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-muted;
+}
+
+.calc-expression {
+  @apply block min-h-6 w-full overflow-x-auto text-right text-base leading-snug text-muted;
+  font: inherit;
+}
+
+.calc-shell--error .calc-expression {
+  @apply text-ink;
+}
+
+.calc-display {
+  @apply mt-1 block min-h-12 w-full overflow-x-auto text-right text-4xl font-semibold leading-tight tabular-nums text-ink;
+  font: inherit;
+}
+
+.calc-shell--error .calc-display {
+  @apply text-base font-semibold text-ink;
+}
+
+.calc-keypad {
+  @apply grid grid-cols-4 gap-2.5;
+}
+
+.calc-key {
+  @apply min-h-14 cursor-pointer rounded-[var(--radius-card)] border border-border-strong bg-surface px-2 py-2 text-xl font-semibold text-ink transition-colors;
+  font: inherit;
+}
+
+.calc-key:hover {
+  @apply border-border-strong bg-surface/80;
+}
+
+.calc-key:active {
+  @apply scale-[0.98];
+}
+
+.calc-key--wide {
+  @apply col-span-2;
+}
+
+.calc-key--operator {
+  @apply bg-surface/60 text-accent;
+}
+
+.calc-key--operator.calc-key--active {
+  @apply border-accent bg-accent text-white;
+}
+
+.calc-key--accent {
+  @apply border-accent bg-accent text-white;
+}
+
+.calc-key--accent:hover {
+  @apply border-accent-hover bg-accent-hover text-white;
+}
+
+.calc-hint {
+  @apply mt-4 text-center text-sm leading-relaxed text-muted;
+}
+
+.tool-calculator--centered {
+  @apply flex justify-center;
 }
 
 .site-search-panel {

@@ -1,83 +1,127 @@
 ---
+import ToolFormActions from "./ToolFormActions.astro";
 import ToolResult from "./ToolResult.astro";
 ---
 
-<form id="break-even-form" class="tool-form">
-  <fieldset class="tool-form__fieldset">
-    <legend class="tool-form__legend">Inputs</legend>
-    <label class="field-label">
-      Fixed costs (USD)
-      <input
-        class="field"
-        name="fixedCosts"
-        type="number"
-        min="0"
-        step="0.01"
-        inputmode="decimal"
-        required
-      />
-    </label>
-    <label class="field-label">
-      Average job revenue (USD)
-      <input
-        class="field"
-        name="averageJobRevenue"
-        type="number"
-        min="0"
-        step="0.01"
-        inputmode="decimal"
-        required
-      />
-    </label>
-    <label class="field-label">
-      Average job variable cost (USD)
-      <input
-        class="field"
-        name="averageJobVariableCost"
-        type="number"
-        min="0"
-        step="0.01"
-        inputmode="decimal"
-        required
-      />
-    </label>
-  </fieldset>
-  <button type="submit" class="btn btn-primary">Calculate</button>
-</form>
-<ToolResult id="break-even-result" />
+<div class="tool-workspace">
+  <div class="tool-workspace__inputs">
+    <form id="break-even-form" class="tool-form">
+      <fieldset class="tool-form__fieldset">
+        <legend class="tool-form__legend">Job economics</legend>
+        <p class="tool-form__hint">
+          Fixed costs stay the same no matter how many jobs you do. Variable cost is what each job
+          costs on top of that.
+        </p>
+        <label class="field-label">
+          Fixed costs (USD)
+          <input
+            class="field"
+            name="fixedCosts"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="6000"
+            required
+          />
+          <span class="field-hint">Monthly overhead, loan payments, or other costs for the period.</span>
+        </label>
+        <label class="field-label">
+          Average job revenue (USD)
+          <input
+            class="field"
+            name="averageJobRevenue"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="3000"
+            required
+          />
+          <span class="field-hint">What you typically charge per job before expenses.</span>
+        </label>
+        <label class="field-label">
+          Average job variable cost (USD)
+          <input
+            class="field"
+            name="averageJobVariableCost"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="1500"
+            required
+          />
+          <span class="field-hint">Materials and labor that scale with each job.</span>
+        </label>
+      </fieldset>
+      <ToolFormActions />
+    </form>
+  </div>
+  <div class="tool-workspace__output">
+    <p class="result-panel__heading">Result</p>
+    <ToolResult id="break-even-result" />
+  </div>
+</div>
 
 <script>
   import { calculateBreakEven } from "../../lib/calculators/break-even.ts";
   import { formatUsd } from "../../lib/calculators/display.ts";
-  import { getFormNumber, renderResultPanel } from "./tool-form-client.ts";
+  import {
+    bindExampleFill,
+    bindResetToolForm,
+    bindSubmitToolForm,
+    getFormNumber,
+    renderMetricGridHtml,
+    renderResultPanel,
+  } from "./tool-form-client.ts";
 
   const form = document.getElementById("break-even-form");
   const result = document.getElementById("break-even-result");
 
-  form?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    if (!(form instanceof HTMLFormElement) || !(result instanceof HTMLElement)) {
-      return;
-    }
-
+  function runBreakEven(formEl: HTMLFormElement, panel: HTMLElement): void {
     const calc = calculateBreakEven({
-      fixedCosts: getFormNumber(form, "fixedCosts") ?? NaN,
-      averageJobRevenue: getFormNumber(form, "averageJobRevenue") ?? NaN,
-      averageJobVariableCost: getFormNumber(form, "averageJobVariableCost") ?? NaN,
+      fixedCosts: getFormNumber(formEl, "fixedCosts") ?? NaN,
+      averageJobRevenue: getFormNumber(formEl, "averageJobRevenue") ?? NaN,
+      averageJobVariableCost: getFormNumber(formEl, "averageJobVariableCost") ?? NaN,
     });
 
     if (!calc.ok) {
-      renderResultPanel(result, { type: "error", message: calc.error });
+      renderResultPanel(panel, { type: "error", message: calc.error });
       return;
     }
 
-    renderResultPanel(result, {
-      type: "result",
-      html: `<ul>
-        <li><strong>Jobs needed to break even:</strong> ${calc.value.jobsNeeded.toLocaleString("en-US", { maximumFractionDigits: 2 })}</li>
-        <li><strong>Total revenue at break even:</strong> ${formatUsd(calc.value.totalRevenue)}</li>
-        <li><strong>Contribution per job:</strong> ${formatUsd(calc.value.contributionPerJob)}</li>
-      </ul>`,
+    const jobsFormatted = calc.value.jobsNeeded.toLocaleString("en-US", {
+      maximumFractionDigits: 2,
     });
-  });
+
+    renderResultPanel(panel, {
+      type: "result",
+      html: renderMetricGridHtml([
+        {
+          label: "Jobs to break even",
+          value: jobsFormatted,
+          primary: true,
+        },
+        {
+          label: "Revenue at break even",
+          value: formatUsd(calc.value.totalRevenue),
+        },
+        {
+          label: "Contribution per job",
+          value: formatUsd(calc.value.contributionPerJob),
+        },
+      ]),
+    });
+  }
+
+  if (form instanceof HTMLFormElement && result instanceof HTMLElement) {
+    bindSubmitToolForm(form, result, runBreakEven);
+    bindResetToolForm(form, result, form.querySelector("[data-tool-reset]"));
+    bindExampleFill(form, form.querySelector("[data-tool-example]"), {
+      fixedCosts: "6000",
+      averageJobRevenue: "3000",
+      averageJobVariableCost: "1500",
+    });
+  }
 </script>

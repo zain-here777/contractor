@@ -1,0 +1,37 @@
+---
+import ToolPage from "../../../components/tools/ToolPage.astro";
+import SimpleCalculator from "../../../components/tools/SimpleCalculator.astro";
+import { relatedToolsExcept } from "../../../lib/tools/related-links";
+
+const toolPath = "/tools/simple-calculator/";
+---
+
+<ToolPage
+  title="Simple calculator"
+  description="Add, subtract, multiply, divide, and quick percent math for job sites."
+  toolPath={toolPath}
+  relatedTools={relatedToolsExcept(toolPath)}
+  calculatorTitle="Calculator"
+  calculatorLead="Tap the keys or use your keyboard. Press C or Escape to clear."
+  limitsText="For quick math only. Double-check measurements and money on important jobs."
+>
+  <div slot="intro">
+    <p>
+      A plain four-function calculator for when you need fast arithmetic—no signup, works offline after
+      the page loads.
+    </p>
+  </div>
+  <div class="tool-calculator tool-calculator--centered" slot="calculator">
+    <SimpleCalculator />
+  </div>
+  <div slot="formula">
+    <p>
+      Standard operations: add (+), subtract (−), multiply (×), divide (÷). Percent (%) alone converts
+      to a decimal; with an operator it uses that percent of the first number (then press = for + or
+      −).
+    </p>
+  </div>
+  <div slot="example">
+    <p>Example: 1,000 + 10% then = gives 1,100 (10% of 1,000 added). 200 × 10% gives 20.</p>
+  </div>
+</ToolPage>

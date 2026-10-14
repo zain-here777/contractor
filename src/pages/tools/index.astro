@@ -4,83 +4,145 @@ import Icon from "../../components/Icon.astro";
 import PageHero from "../../components/PageHero.astro";
 import type { IconName } from "../../components/Icon.astro";
 
-const tools: {
+type ToolEntry = {
   href: string;
   title: string;
   description: string;
   icon: IconName;
   featured?: boolean;
-}[] = [
+};
+
+const sections: { heading: string; tools: ToolEntry[] }[] = [
   {
-    href: "/tools/do-i-need-a-license/",
-    title: "Do I need a license for this job?",
-    description: "California CSLB threshold and permit checker from verified data.",
-    icon: "shield",
-    featured: true,
+    heading: "Licensing",
+    tools: [
+      {
+        href: "/tools/do-i-need-a-license/",
+        title: "Do I need a license for this job?",
+        description: "California CSLB threshold and permit checker from verified data.",
+        icon: "shield",
+        featured: true,
+      },
+    ],
   },
   {
-    href: "/tools/markup-margin-calculator/",
-    title: "Markup vs margin calculator",
-    description: "Switch between markup and margin without mixing formulas.",
-    icon: "calculator",
+    heading: "Pricing and profit",
+    tools: [
+      {
+        href: "/tools/markup-margin-calculator/",
+        title: "Markup vs margin calculator",
+        description: "Switch between markup and margin without mixing formulas.",
+        icon: "calculator",
+      },
+      {
+        href: "/tools/job-profit-calculator/",
+        title: "Job profit calculator",
+        description: "Profit, margin, and markup from quoted price and job cost.",
+        icon: "calculator",
+      },
+      {
+        href: "/tools/hourly-rate-calculator/",
+        title: "Hourly rate calculator",
+        description: "Billable rate from labor, overhead, and profit targets.",
+        icon: "calculator",
+      },
+      {
+        href: "/tools/daily-rate-calculator/",
+        title: "Daily rate calculator",
+        description: "Hourly rate × billable hours per day.",
+        icon: "calculator",
+      },
+      {
+        href: "/tools/overhead-rate-calculator/",
+        title: "Overhead rate calculator",
+        description: "Spread yearly overhead across billable hours.",
+        icon: "calculator",
+      },
+      {
+        href: "/tools/break-even-calculator/",
+        title: "Break-even calculator",
+        description: "How many jobs cover fixed costs, given revenue and variable cost per job.",
+        icon: "calculator",
+      },
+    ],
   },
   {
-    href: "/tools/hourly-rate-calculator/",
-    title: "Hourly rate calculator",
-    description: "Billable rate from labor, overhead, and profit targets.",
-    icon: "calculator",
+    heading: "Estimating",
+    tools: [
+      {
+        href: "/tools/material-waste-calculator/",
+        title: "Material waste calculator",
+        description: "Order quantity with a waste factor on net material.",
+        icon: "calculator",
+      },
+    ],
   },
   {
-    href: "/tools/break-even-calculator/",
-    title: "Break-even calculator",
-    description: "Revenue needed to cover fixed and variable costs.",
-    icon: "calculator",
-  },
-  {
-    href: "/tools/overhead-rate-calculator/",
-    title: "Overhead rate calculator",
-    description: "Turn monthly overhead into a load rate for estimates.",
-    icon: "calculator",
+    heading: "General",
+    tools: [
+      {
+        href: "/tools/simple-calculator/",
+        title: "Simple calculator",
+        description: "Add, subtract, multiply, and divide—keyboard friendly.",
+        icon: "calculator",
+      },
+    ],
   },
 ];
 ---
 
 <BaseLayout
   title="Tools"
-  description="Free calculators for contractor pricing, hourly rates, overhead, and break-even estimates."
+  description="Free calculators for contractor pricing, hourly rates, overhead, break-even, materials, and quick math."
   canonicalPath="/tools/"
 >
   <PageHero
     title="Tools"
-    lead="Plain calculators built on tested formulas. Estimates only—not tax, legal, or financial advice."
+    lead="Plain calculators built on tested formulas. Use Try example to load sample numbers, then click Calculate when you are ready."
   />
-  <ul class="card-grid card-grid--2 content-block">
-    {
-      tools.map((tool) => (
-        <li>
-          <a
-            class:list={[
-              "card",
-              "card--link",
-              "card--horizontal",
-              tool.featured && "card--featured",
-            ]}
-            href={tool.href}
-          >
-            <span class="card__icon-wrap card__icon-wrap--accent">
-              <Icon name={tool.icon} />
-            </span>
-            <span class="card__body">
-              {tool.featured && <span class="card__badge">Featured</span>}
-              <span class="card__title">{tool.title}</span>
-              <span class="card__text">{tool.description}</span>
-            </span>
-            <Icon name="arrow-right" class="card__chevron" />
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+  <div class="callout callout--muted content-block" aria-label="How to use these tools">
+    <p class="callout__text m-0">
+      <strong>Tip:</strong> On each tool page, click <strong>Try example</strong> to fill sample
+      values, adjust anything you like, then click <strong>Calculate</strong> to see the result.
+      The simple calculator updates as you press keys.
+    </p>
+  </div>
+  {
+    sections.map((section) => (
+      <section class="content-block" aria-labelledby={`tools-${section.heading.replace(/\s+/g, "-").toLowerCase()}`}>
+        <div class="section-heading">
+          <h2 id={`tools-${section.heading.replace(/\s+/g, "-").toLowerCase()}`} class="section-heading__title">
+            {section.heading}
+          </h2>
+        </div>
+        <ul class="card-grid card-grid--2">
+          {section.tools.map((tool) => (
+            <li>
+              <a
+                class:list={[
+                  "card",
+                  "card--link",
+                  "card--horizontal",
+                  tool.featured && "card--featured",
+                ]}
+                href={tool.href}
+              >
+                <span class="card__icon-wrap card__icon-wrap--accent">
+                  <Icon name={tool.icon} />
+                </span>
+                <span class="card__body">
+                  {tool.featured && <span class="card__badge">Featured</span>}
+                  <span class="card__title">{tool.title}</span>
+                  <span class="card__text">{tool.description}</span>
+                </span>
+                <Icon name="arrow-right" class="card__chevron" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
   <p class="content-block">
     <a class="btn btn-secondary btn--icon" href="/licensing/">
       <Icon name="map-pin" />

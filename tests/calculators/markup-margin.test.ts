@@ -43,4 +43,9 @@ describe("markup-margin calculator", () => {
   it("rejects negative cost", () => {
     expect(priceFromCostAndMarkup(-100, 0.25).ok).toBe(false);
   });
+
+  it("rejects zero cost so margin is not NaN", () => {
+    expect(priceFromCostAndMarkup(0, 0.25).ok).toBe(false);
+    expect(priceFromCostAndMargin(0, 0.2).ok).toBe(false);
+  });
 });

@@ -1,5 +1,6 @@
 ---
 import Icon from "./Icon.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 import { isNavLinkActive, primaryNavLinks, siteBrand } from "../config/site";
 
 const pathname = Astro.url.pathname;
@@ -37,6 +38,7 @@ const pathname = Astro.url.pathname;
       </nav>
 
       <div class="site-header__actions site-header__actions--desktop site-header__actions--pill">
+        <ThemeToggle />
         <a class="btn btn-pill-solid btn--compact site-header__cta" href="/licensing/">
           Find your state
         </a>
@@ -48,6 +50,7 @@ const pathname = Astro.url.pathname;
           <span class="site-nav-drawer__icon" aria-hidden="true" />
         </summary>
         <div class="site-nav-drawer__panel">
+          <ThemeToggle />
           <nav class="site-nav site-nav--mobile" aria-label="Primary">
             {
               primaryNavLinks.map((link) => {

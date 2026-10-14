@@ -1,0 +1,98 @@
+---
+import ToolFormActions from "./ToolFormActions.astro";
+import ToolResult from "./ToolResult.astro";
+---
+
+<div class="tool-workspace">
+  <div class="tool-workspace__inputs">
+    <form id="daily-rate-form" class="tool-form">
+      <fieldset class="tool-form__fieldset">
+        <legend class="tool-form__legend">Day rate</legend>
+        <p class="tool-form__hint">
+          Turn an hourly rate into a day rate for T&amp;M quotes or internal planning.
+        </p>
+        <label class="field-label">
+          Hourly rate (USD)
+          <input
+            class="field"
+            name="hourlyRate"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="116.67"
+            required
+          />
+          <span class="field-hint">From the hourly rate calculator or your rate sheet.</span>
+        </label>
+        <label class="field-label">
+          Billable hours per day
+          <input
+            class="field"
+            name="hoursPerDay"
+            type="number"
+            min="0"
+            step="0.25"
+            inputmode="decimal"
+            placeholder="8"
+            required
+          />
+          <span class="field-hint">Hours you expect to bill in a typical field day.</span>
+        </label>
+      </fieldset>
+      <ToolFormActions />
+    </form>
+  </div>
+  <div class="tool-workspace__output">
+    <p class="result-panel__heading">Result</p>
+    <ToolResult id="daily-rate-result" />
+  </div>
+</div>
+
+<script>
+  import { calculateDailyRate } from "../../lib/calculators/daily-rate.ts";
+  import { formatUsd } from "../../lib/calculators/display.ts";
+  import {
+    bindExampleFill,
+    bindResetToolForm,
+    bindSubmitToolForm,
+    getFormNumber,
+    renderMetricGridHtml,
+    renderResultPanel,
+  } from "./tool-form-client.ts";
+
+  const form = document.getElementById("daily-rate-form");
+  const result = document.getElementById("daily-rate-result");
+
+  function runDailyRate(formEl: HTMLFormElement, panel: HTMLElement): void {
+    const calc = calculateDailyRate(
+      getFormNumber(formEl, "hourlyRate") ?? NaN,
+      getFormNumber(formEl, "hoursPerDay") ?? NaN,
+    );
+
+    if (!calc.ok) {
+      renderResultPanel(panel, { type: "error", message: calc.error });
+      return;
+    }
+
+    renderResultPanel(panel, {
+      type: "result",
+      html: renderMetricGridHtml([
+        {
+          label: "Day rate to charge",
+          value: formatUsd(calc.value.dailyRate),
+          primary: true,
+        },
+      ]),
+    });
+  }
+
+  if (form instanceof HTMLFormElement && result instanceof HTMLElement) {
+    bindSubmitToolForm(form, result, runDailyRate);
+    bindResetToolForm(form, result, form.querySelector("[data-tool-reset]"));
+    bindExampleFill(form, form.querySelector("[data-tool-example]"), {
+      hourlyRate: "116.67",
+      hoursPerDay: "8",
+    });
+  }
+</script>

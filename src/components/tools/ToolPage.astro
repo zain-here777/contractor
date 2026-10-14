@@ -10,9 +10,20 @@ interface Props {
   description: string;
   toolPath: string;
   relatedTools: RelatedToolLink[];
+  calculatorTitle?: string;
+  calculatorLead?: string;
+  limitsText?: string;
 }
 
-const { title, description, toolPath, relatedTools } = Astro.props;
+const {
+  title,
+  description,
+  toolPath,
+  relatedTools,
+  calculatorTitle = "Try it",
+  calculatorLead = "Fill in the fields, then click Calculate (or Check requirement on the license tool) to see your result on the right.",
+  limitsText = "Estimates only. Not tax, legal, or financial advice.",
+} = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} canonicalPath={toolPath}>
@@ -24,7 +35,10 @@ const { title, description, toolPath, relatedTools } = Astro.props;
     </PageHero>
 
     <section class="tool-panel panel panel--emphasis" aria-labelledby="calculator-heading">
-      <h2 id="calculator-heading" class="panel__title">Calculator</h2>
+      <div class="tool-panel__intro">
+        <h2 id="calculator-heading" class="panel__title">{calculatorTitle}</h2>
+        <p class="tool-panel__lead">{calculatorLead}</p>
+      </div>
       <div class="tool-calculator">
         <slot name="calculator" />
       </div>
@@ -48,7 +62,7 @@ const { title, description, toolPath, relatedTools } = Astro.props;
 
     <aside class="callout callout--muted content-block" aria-label="Calculator limits">
       <p class="callout__text">
-        <strong>Limits:</strong> Estimates only. Not tax, legal, or financial advice.
+        <strong>Limits:</strong> {limitsText}
       </p>
     </aside>
 

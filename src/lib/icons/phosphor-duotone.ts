@@ -8,7 +8,9 @@ import checkCircleRaw from "@phosphor-icons/core/assets/duotone/check-circle-duo
 import clipboardRaw from "@phosphor-icons/core/assets/duotone/clipboard-duotone.svg?raw";
 import mapPinRaw from "@phosphor-icons/core/assets/duotone/map-pin-duotone.svg?raw";
 import magnifyingGlassRaw from "@phosphor-icons/core/assets/duotone/magnifying-glass-duotone.svg?raw";
+import moonRaw from "@phosphor-icons/core/assets/duotone/moon-duotone.svg?raw";
 import shieldRaw from "@phosphor-icons/core/assets/duotone/shield-duotone.svg?raw";
+import sunRaw from "@phosphor-icons/core/assets/duotone/sun-duotone.svg?raw";
 import toolboxRaw from "@phosphor-icons/core/assets/duotone/toolbox-duotone.svg?raw";
 import wrenchRaw from "@phosphor-icons/core/assets/duotone/wrench-duotone.svg?raw";
 
@@ -18,8 +20,10 @@ export type IconName =
   | "check-circle"
   | "clipboard"
   | "map-pin"
+  | "moon"
   | "search"
   | "shield"
+  | "sun"
   | "tools"
   | "wrench";
 
@@ -38,8 +42,10 @@ export const phosphorDuotonePaths: Record<IconName, string> = {
   "check-circle": phosphorDuotoneInner(checkCircleRaw),
   clipboard: phosphorDuotoneInner(clipboardRaw),
   "map-pin": phosphorDuotoneInner(mapPinRaw),
+  moon: phosphorDuotoneInner(moonRaw),
   search: phosphorDuotoneInner(magnifyingGlassRaw),
   shield: phosphorDuotoneInner(shieldRaw),
+  sun: phosphorDuotoneInner(sunRaw),
   tools: phosphorDuotoneInner(toolboxRaw),
   wrench: phosphorDuotoneInner(wrenchRaw),
 };

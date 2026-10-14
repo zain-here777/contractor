@@ -10,44 +10,100 @@ const { config } = Astro.props;
 const configJson = JSON.stringify(config);
 ---
 
-<form id="license-required-form" class="tool-form" data-config={configJson}>
-  <fieldset class="tool-form__fieldset">
-    <legend class="tool-form__legend">Job details ({config.stateName})</legend>
-    <p class="tool-form__hint">
-      Threshold in our data file:{" "}
-      {config.thresholdUsd.toLocaleString("en-US", { style: "currency", currency: "USD" })}{" "}
-      (effective {config.effectiveDate}). Labor and materials combined.
-    </p>
-    <label class="field-label">
-      Total job value — labor + materials (USD)
-      <input
-        class="field"
-        name="jobValueUsd"
-        type="number"
-        min="0"
-        step="0.01"
-        inputmode="decimal"
-        required
-      />
-    </label>
-    <label class="field-label">
-      Does the work need a building permit?
-      <select class="field" name="needsPermit" required>
-        <option value="no">No</option>
-        <option value="yes">Yes</option>
-      </select>
-    </label>
-    <label class="field-label">
-      Will you hire workers for this job?
-      <select class="field" name="hiresWorkers" required>
-        <option value="no">No</option>
-        <option value="yes">Yes</option>
-      </select>
-    </label>
-  </fieldset>
-  <button type="submit" class="btn btn-primary">Check</button>
-</form>
-<ToolResult id="license-required-result" />
+<div class="tool-workspace">
+  <div class="tool-workspace__inputs">
+    <form id="license-required-form" class="tool-form" data-config={configJson}>
+      <fieldset class="tool-form__fieldset">
+        <legend class="tool-form__legend">Job details ({config.stateName})</legend>
+        <p class="tool-form__hint">
+          Threshold in our data:{" "}
+          {config.thresholdUsd.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD",
+          })}{" "}
+          (effective {config.effectiveDate}). Count labor and materials together.
+        </p>
+        <label class="field-label">
+          Total job value — labor + materials (USD)
+          <input
+            class="field"
+            name="jobValueUsd"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="900"
+            required
+          />
+          <span class="field-hint">Include labor and materials in one total.</span>
+        </label>
+        <fieldset class="field-label">
+          <legend class="sr-only">Does the work need a building permit?</legend>
+          <span id="permit-question">Does the work need a building permit?</span>
+          <div class="choice-group" role="radiogroup" aria-labelledby="permit-question">
+            <div class="choice-group__option">
+              <input
+                class="choice-group__input"
+                type="radio"
+                name="needsPermit"
+                id="needs-permit-no"
+                value="no"
+                checked
+              />
+              <label class="choice-group__label" for="needs-permit-no">No</label>
+            </div>
+            <div class="choice-group__option">
+              <input
+                class="choice-group__input"
+                type="radio"
+                name="needsPermit"
+                id="needs-permit-yes"
+                value="yes"
+              />
+              <label class="choice-group__label" for="needs-permit-yes">Yes</label>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="field-label">
+          <legend class="sr-only">Will you hire workers for this job?</legend>
+          <span id="workers-question">Will you hire workers for this job?</span>
+          <div class="choice-group" role="radiogroup" aria-labelledby="workers-question">
+            <div class="choice-group__option">
+              <input
+                class="choice-group__input"
+                type="radio"
+                name="hiresWorkers"
+                id="hires-workers-no"
+                value="no"
+                checked
+              />
+              <label class="choice-group__label" for="hires-workers-no">No</label>
+            </div>
+            <div class="choice-group__option">
+              <input
+                class="choice-group__input"
+                type="radio"
+                name="hiresWorkers"
+                id="hires-workers-yes"
+                value="yes"
+              />
+              <label class="choice-group__label" for="hires-workers-yes">Yes</label>
+            </div>
+          </div>
+        </fieldset>
+      </fieldset>
+      <div class="tool-form__actions">
+        <button type="submit" class="btn btn-primary">Check requirement</button>
+        <button type="button" class="btn btn-secondary" data-tool-reset>Reset</button>
+        <button type="button" class="btn btn-ghost" data-tool-example>Try example ($900)</button>
+      </div>
+    </form>
+  </div>
+  <div class="tool-workspace__output">
+    <p class="result-panel__heading">Outcome</p>
+    <ToolResult id="license-required-result" />
+  </div>
+</div>
 
 <script>
   import { initLicenseRequiredChecker } from "./license-required-checker.client.ts";

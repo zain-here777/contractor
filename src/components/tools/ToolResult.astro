@@ -6,4 +6,12 @@ interface Props {
 const { id } = Astro.props;
 ---
 
-<div id={id} class="result-panel" aria-live="polite" aria-atomic="true" hidden></div>
+<div
+  id={id}
+  class="result-panel result-panel--placeholder"
+  data-empty="true"
+  aria-live="polite"
+  aria-atomic="true"
+>
+  <p class="result-panel__hint">Enter your details, then click Calculate to see results here.</p>
+</div>

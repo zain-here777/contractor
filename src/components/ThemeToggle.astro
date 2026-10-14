@@ -1,0 +1,16 @@
+---
+import Icon from "./Icon.astro";
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  aria-label="Switch to dark mode"
+  aria-pressed="false"
+>
+  <Icon name="moon" class="theme-toggle__icon theme-toggle__icon--to-dark" />
+  <Icon name="sun" class="theme-toggle__icon theme-toggle__icon--to-light" />
+  <span class="theme-toggle__label theme-toggle__label--to-dark">Dark</span>
+  <span class="theme-toggle__label theme-toggle__label--to-light">Light</span>
+</button>

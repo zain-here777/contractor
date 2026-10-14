@@ -1,66 +1,99 @@
 ---
+import ToolFormActions from "./ToolFormActions.astro";
 import ToolResult from "./ToolResult.astro";
 ---
 
-<form id="overhead-rate-form" class="tool-form">
-  <fieldset class="tool-form__fieldset">
-    <legend class="tool-form__legend">Inputs</legend>
-    <label class="field-label">
-      Yearly overhead (USD)
-      <input
-        class="field"
-        name="yearlyOverhead"
-        type="number"
-        min="0"
-        step="0.01"
-        inputmode="decimal"
-        required
-      />
-    </label>
-    <label class="field-label">
-      Billable hours per year
-      <input
-        class="field"
-        name="billableHours"
-        type="number"
-        min="0"
-        step="1"
-        inputmode="numeric"
-        required
-      />
-    </label>
-  </fieldset>
-  <button type="submit" class="btn btn-primary">Calculate</button>
-</form>
-<ToolResult id="overhead-rate-result" />
+<div class="tool-workspace">
+  <div class="tool-workspace__inputs">
+    <form id="overhead-rate-form" class="tool-form">
+      <fieldset class="tool-form__fieldset">
+        <legend class="tool-form__legend">Overhead load</legend>
+        <p class="tool-form__hint">
+          Spread yearly overhead across the hours you actually bill. Use the same billable hours as
+          your hourly rate calculator for consistency.
+        </p>
+        <label class="field-label">
+          Yearly overhead (USD)
+          <input
+            class="field"
+            name="yearlyOverhead"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="40000"
+            required
+          />
+          <span class="field-hint">Same yearly overhead figure as the hourly rate calculator.</span>
+        </label>
+        <label class="field-label">
+          Billable hours per year
+          <input
+            class="field"
+            name="billableHours"
+            type="number"
+            min="0"
+            step="1"
+            inputmode="numeric"
+            placeholder="1200"
+            required
+          />
+          <span class="field-hint">Hours you expect to bill clients in a year.</span>
+        </label>
+      </fieldset>
+      <ToolFormActions />
+    </form>
+  </div>
+  <div class="tool-workspace__output">
+    <p class="result-panel__heading">Result</p>
+    <ToolResult id="overhead-rate-result" />
+  </div>
+</div>
 
 <script>
   import { calculateOverheadRate } from "../../lib/calculators/overhead-rate.ts";
   import { formatUsd } from "../../lib/calculators/display.ts";
-  import { getFormNumber, renderResultPanel } from "./tool-form-client.ts";
+  import {
+    bindExampleFill,
+    bindResetToolForm,
+    bindSubmitToolForm,
+    getFormNumber,
+    renderMetricGridHtml,
+    renderResultPanel,
+  } from "./tool-form-client.ts";
 
   const form = document.getElementById("overhead-rate-form");
   const result = document.getElementById("overhead-rate-result");
 
-  form?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    if (!(form instanceof HTMLFormElement) || !(result instanceof HTMLElement)) {
-      return;
-    }
-
+  function runOverheadRate(formEl: HTMLFormElement, panel: HTMLElement): void {
     const calc = calculateOverheadRate({
-      yearlyOverhead: getFormNumber(form, "yearlyOverhead") ?? NaN,
-      billableHours: getFormNumber(form, "billableHours") ?? NaN,
+      yearlyOverhead: getFormNumber(formEl, "yearlyOverhead") ?? NaN,
+      billableHours: getFormNumber(formEl, "billableHours") ?? NaN,
     });
 
     if (!calc.ok) {
-      renderResultPanel(result, { type: "error", message: calc.error });
+      renderResultPanel(panel, { type: "error", message: calc.error });
       return;
     }
 
-    renderResultPanel(result, {
+    renderResultPanel(panel, {
       type: "result",
-      html: `<p><strong>Overhead per billable hour:</strong> ${formatUsd(calc.value.overheadPerHour)}</p>`,
+      html: renderMetricGridHtml([
+        {
+          label: "Overhead per billable hour",
+          value: formatUsd(calc.value.overheadPerHour),
+          primary: true,
+        },
+      ]),
     });
-  });
+  }
+
+  if (form instanceof HTMLFormElement && result instanceof HTMLElement) {
+    bindSubmitToolForm(form, result, runOverheadRate);
+    bindResetToolForm(form, result, form.querySelector("[data-tool-reset]"));
+    bindExampleFill(form, form.querySelector("[data-tool-example]"), {
+      yearlyOverhead: "40000",
+      billableHours: "1200",
+    });
+  }
 </script>

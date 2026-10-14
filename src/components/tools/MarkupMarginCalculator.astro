@@ -1,44 +1,90 @@
 ---
+import ToolFormActions from "./ToolFormActions.astro";
 import ToolResult from "./ToolResult.astro";
 ---
 
-<form id="markup-margin-form" class="tool-form">
-  <fieldset class="tool-form__fieldset">
-    <legend class="tool-form__legend">Inputs</legend>
-    <p class="tool-form__hint">
-      Enter amounts in USD. Enter markup or margin as a percent (for example, 25 for 25%).
-    </p>
-    <label class="field-label">
-      Job cost (USD)
-      <input
-        class="field"
-        name="cost"
-        type="number"
-        min="0"
-        step="0.01"
-        inputmode="decimal"
-        required
-      />
-    </label>
-    <label class="field-label">
-      Calculation mode
-      <select class="field" name="mode" required>
-        <option value="markup">Use markup %</option>
-        <option value="margin">Use margin %</option>
-      </select>
-    </label>
-    <label class="field-label" id="markup-field-label">
-      Markup (%)
-      <input class="field" name="markupPct" type="number" step="0.01" inputmode="decimal" />
-    </label>
-    <label class="field-label tool-form__label--hidden" id="margin-field-label">
-      Margin (%)
-      <input class="field" name="marginPct" type="number" step="0.01" inputmode="decimal" disabled />
-    </label>
-  </fieldset>
-  <button type="submit" class="btn btn-primary">Calculate</button>
-</form>
-<ToolResult id="markup-margin-result" />
+<div class="tool-workspace">
+  <div class="tool-workspace__inputs">
+    <form id="markup-margin-form" class="tool-form">
+      <fieldset class="tool-form__fieldset">
+        <legend class="tool-form__legend">Your numbers</legend>
+        <p class="tool-form__hint">
+          Amounts in USD. Markup and margin are entered as percents (25 means 25%).
+        </p>
+        <label class="field-label">
+          Job cost (USD)
+          <input
+            class="field"
+            name="cost"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="1000"
+            required
+          />
+          <span class="field-hint">Materials, labor, and other direct costs for the job.</span>
+        </label>
+        <div class="field-label">
+          <span id="markup-mode-label">I know my…</span>
+          <div class="segmented-control" role="group" aria-labelledby="markup-mode-label">
+            <div class="segmented-control__option">
+              <input
+                class="segmented-control__input"
+                type="radio"
+                name="mode"
+                id="mode-markup"
+                value="markup"
+                checked
+              />
+              <label class="segmented-control__label" for="mode-markup">Markup %</label>
+            </div>
+            <div class="segmented-control__option">
+              <input
+                class="segmented-control__input"
+                type="radio"
+                name="mode"
+                id="mode-margin"
+                value="margin"
+              />
+              <label class="segmented-control__label" for="mode-margin">Margin %</label>
+            </div>
+          </div>
+        </div>
+        <label class="field-label" id="markup-field-label">
+          Markup (%)
+          <input
+            class="field"
+            name="markupPct"
+            type="number"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="25"
+          />
+          <span class="field-hint">Percent added on top of job cost.</span>
+        </label>
+        <label class="field-label tool-form__label--hidden" id="margin-field-label">
+          Margin (%)
+          <input
+            class="field"
+            name="marginPct"
+            type="number"
+            step="0.01"
+            inputmode="decimal"
+            placeholder="20"
+            disabled
+          />
+          <span class="field-hint">Profit as a share of the final price.</span>
+        </label>
+      </fieldset>
+      <ToolFormActions />
+    </form>
+  </div>
+  <div class="tool-workspace__output">
+    <p class="result-panel__heading">Result</p>
+    <ToolResult id="markup-margin-result" />
+  </div>
+</div>
 
 <script>
   import {
@@ -50,21 +96,33 @@ import ToolResult from "./ToolResult.astro";
     formatUsd,
     parsePercentInputToDecimal,
   } from "../../lib/calculators/display.ts";
-  import { getFormNumber, renderResultPanel } from "./tool-form-client.ts";
+  import {
+    bindExampleFill,
+    bindResetToolForm,
+    bindSubmitToolForm,
+    getFormNumber,
+    renderMetricGridHtml,
+    renderResultPanel,
+  } from "./tool-form-client.ts";
 
   const form = document.getElementById("markup-margin-form");
   const result = document.getElementById("markup-margin-result");
-  const modeSelect = form?.querySelector('select[name="mode"]');
+  const modeInputs = form?.querySelectorAll('input[name="mode"]');
   const markupLabel = document.getElementById("markup-field-label");
   const marginLabel = document.getElementById("margin-field-label");
   const markupInput = form?.querySelector('input[name="markupPct"]');
   const marginInput = form?.querySelector('input[name="marginPct"]');
 
-  function syncModeFields(): void {
-    if (!(modeSelect instanceof HTMLSelectElement)) {
-      return;
+  function selectedMode(): "markup" | "margin" {
+    const checked = form?.querySelector('input[name="mode"]:checked');
+    if (checked instanceof HTMLInputElement && checked.value === "margin") {
+      return "margin";
     }
-    const useMarkup = modeSelect.value === "markup";
+    return "markup";
+  }
+
+  function syncModeFields(): void {
+    const useMarkup = selectedMode() === "markup";
     markupLabel?.classList.toggle("tool-form__label--hidden", !useMarkup);
     marginLabel?.classList.toggle("tool-form__label--hidden", useMarkup);
     if (markupInput instanceof HTMLInputElement) {
@@ -77,19 +135,18 @@ import ToolResult from "./ToolResult.astro";
     }
   }
 
-  modeSelect?.addEventListener("change", syncModeFields);
+  modeInputs?.forEach((input) => {
+    input.addEventListener("change", syncModeFields);
+  });
   syncModeFields();
 
-  form?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    if (!(form instanceof HTMLFormElement) || !(result instanceof HTMLElement)) {
-      return;
-    }
-
-    const cost = getFormNumber(form, "cost");
-    const mode = form.elements.namedItem("mode");
-    if (cost === null || !(mode instanceof HTMLSelectElement)) {
-      renderResultPanel(result, {
+  function runMarkupMargin(
+    formEl: HTMLFormElement,
+    panel: HTMLElement,
+  ): void {
+    const cost = getFormNumber(formEl, "cost");
+    if (cost === null) {
+      renderResultPanel(panel, {
         type: "error",
         message: "Enter a valid job cost.",
       });
@@ -97,10 +154,10 @@ import ToolResult from "./ToolResult.astro";
     }
 
     let calc;
-    if (mode.value === "markup") {
-      const markupPct = getFormNumber(form, "markupPct");
+    if (selectedMode() === "markup") {
+      const markupPct = getFormNumber(formEl, "markupPct");
       if (markupPct === null) {
-        renderResultPanel(result, {
+        renderResultPanel(panel, {
           type: "error",
           message: "Enter a valid markup percent.",
         });
@@ -108,9 +165,9 @@ import ToolResult from "./ToolResult.astro";
       }
       calc = priceFromCostAndMarkup(cost, parsePercentInputToDecimal(markupPct));
     } else {
-      const marginPct = getFormNumber(form, "marginPct");
+      const marginPct = getFormNumber(formEl, "marginPct");
       if (marginPct === null) {
-        renderResultPanel(result, {
+        renderResultPanel(panel, {
           type: "error",
           message: "Enter a valid margin percent.",
         });
@@ -120,17 +177,39 @@ import ToolResult from "./ToolResult.astro";
     }
 
     if (!calc.ok) {
-      renderResultPanel(result, { type: "error", message: calc.error });
+      renderResultPanel(panel, { type: "error", message: calc.error });
       return;
     }
 
-    renderResultPanel(result, {
+    renderResultPanel(panel, {
       type: "result",
-      html: `<ul>
-        <li><strong>Price:</strong> ${formatUsd(calc.value.price)}</li>
-        <li><strong>Markup:</strong> ${formatPercentFromDecimal(calc.value.markup)}</li>
-        <li><strong>Margin:</strong> ${formatPercentFromDecimal(calc.value.margin)}</li>
-      </ul>`,
+      html: renderMetricGridHtml([
+        { label: "Price to charge", value: formatUsd(calc.value.price), primary: true },
+        { label: "Markup", value: formatPercentFromDecimal(calc.value.markup) },
+        { label: "Margin", value: formatPercentFromDecimal(calc.value.margin) },
+      ]),
     });
-  });
+  }
+
+  if (form instanceof HTMLFormElement && result instanceof HTMLElement) {
+    bindSubmitToolForm(form, result, runMarkupMargin);
+    bindResetToolForm(
+      form,
+      result,
+      form.querySelector("[data-tool-reset]"),
+      syncModeFields,
+    );
+    bindExampleFill(
+      form,
+      form.querySelector("[data-tool-example]"),
+      { cost: "1000", mode: "markup", markupPct: "25" },
+      () => {
+        const markupRadio = form.querySelector("#mode-markup");
+        if (markupRadio instanceof HTMLInputElement) {
+          markupRadio.checked = true;
+        }
+        syncModeFields();
+      },
+    );
+  }
 </script>

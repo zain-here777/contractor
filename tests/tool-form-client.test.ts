@@ -1,17 +1,34 @@
-import { describe, expect, it } from "vitest";
-import { errorResultHtml } from "../src/components/tools/tool-form-client";
+import { describe, expect, it, vi } from "vitest";
+import {
+  debounce,
+  renderMetricGridHtml,
+  TOOL_LIVE_DEBOUNCE_MS,
+} from "../src/components/tools/tool-form-client.ts";
 
-describe("tool-form-client", () => {
-  it("prefixes errors with the field-error pattern (Error: via CSS)", () => {
-    const html = errorResultHtml("Billable hours must be greater than zero.");
-    expect(html).toContain('class="field-error"');
-    expect(html).toContain("Billable hours must be greater than zero.");
-    expect(html).not.toContain("<script");
+describe("renderMetricGridHtml", () => {
+  it("escapes metric labels and marks the first metric primary by default", () => {
+    const html = renderMetricGridHtml([
+      { label: "Price <test>", value: "$1,250.00" },
+      { label: "Margin", value: "20%" },
+    ]);
+    expect(html).toContain("Price &lt;test&gt;");
+    expect(html).toContain("tool-metric--primary");
+    expect(html).toContain("$1,250.00");
   });
+});
 
-  it("escapes HTML in error messages", () => {
-    const html = errorResultHtml('<img onerror="alert(1)">');
-    expect(html).not.toContain("<img");
-    expect(html).toContain("&lt;img");
+describe("debounce", () => {
+  it("waits before invoking", async () => {
+    vi.useFakeTimers();
+    let count = 0;
+    const fn = debounce(() => {
+      count += 1;
+    }, TOOL_LIVE_DEBOUNCE_MS);
+    fn();
+    fn();
+    expect(count).toBe(0);
+    await vi.advanceTimersByTimeAsync(TOOL_LIVE_DEBOUNCE_MS);
+    expect(count).toBe(1);
+    vi.useRealTimers();
   });
 });

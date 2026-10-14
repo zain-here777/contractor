@@ -1,5 +1,5 @@
 import { fail, ok, type CalcResult } from "./types";
-import { requireFiniteNumber } from "./validate";
+import { requireFiniteNumber, requirePositiveNumber } from "./validate";
 
 export type MarkupMarginPair = {
   price: number;
@@ -57,7 +57,7 @@ export function priceFromCostAndMarkup(
   cost: number,
   markup: number,
 ): CalcResult<MarkupMarginPair> {
-  const costCheck = requireFiniteNumber(cost, "Cost");
+  const costCheck = requirePositiveNumber(cost, "Cost");
   if (!costCheck.ok) {
     return costCheck;
   }
@@ -66,7 +66,13 @@ export function priceFromCostAndMarkup(
     return markupCheck;
   }
   const price = costCheck.value * (1 + markupCheck.value);
+  if (!Number.isFinite(price) || price <= 0) {
+    return fail("Could not calculate a price greater than zero.");
+  }
   const margin = marginFromPriceAndCost(price, costCheck.value);
+  if (!Number.isFinite(margin)) {
+    return fail("Could not calculate margin from the numbers provided.");
+  }
   return ok({ price, markup: markupCheck.value, margin });
 }
 
@@ -75,7 +81,7 @@ export function priceFromCostAndMargin(
   cost: number,
   margin: number,
 ): CalcResult<MarkupMarginPair> {
-  const costCheck = requireFiniteNumber(cost, "Cost");
+  const costCheck = requirePositiveNumber(cost, "Cost");
   if (!costCheck.ok) {
     return costCheck;
   }

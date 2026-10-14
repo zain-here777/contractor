@@ -1,0 +1,36 @@
+---
+import ToolPage from "../../../components/tools/ToolPage.astro";
+import JobProfitCalculator from "../../../components/tools/JobProfitCalculator.astro";
+import { relatedToolsExcept } from "../../../lib/tools/related-links";
+
+const toolPath = "/tools/job-profit-calculator/";
+---
+
+<ToolPage
+  title="Job profit calculator"
+  description="See profit, margin, and markup from a quoted job price and your cost."
+  toolPath={toolPath}
+  relatedTools={relatedToolsExcept(toolPath)}
+>
+  <div slot="intro">
+    <p>
+      You already know the price and cost. This shows how much profit is in the job and how margin and
+      markup relate.
+    </p>
+    <p>TODO(user): add when you review margin on closed jobs vs estimates.</p>
+  </div>
+  <JobProfitCalculator slot="calculator" />
+  <div slot="formula">
+    <ul>
+      <li>Profit = job price − job cost</li>
+      <li>Margin = profit ÷ job price</li>
+      <li>Markup on cost = profit ÷ job cost</li>
+    </ul>
+  </div>
+  <div slot="example">
+    <p>
+      Price $1,250 and cost $1,000 → profit $250. Margin is 20% ($250 ÷ $1,250). Markup on cost is 25%
+      ($250 ÷ $1,000).
+    </p>
+  </div>
+</ToolPage>
