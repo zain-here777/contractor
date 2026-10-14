@@ -149,7 +149,9 @@ export function formatSourceLinkLabel(url: string): string {
     if (agency) {
       return `${agency} website`;
     }
-    const host = parsed.hostname.replace(/^www\d?\./i, "").replace(/^www\./i, "");
+    const host = parsed.hostname
+      .replace(/^www\d?\./i, "")
+      .replace(/^www\./i, "");
     return host;
   } catch {
     return url;

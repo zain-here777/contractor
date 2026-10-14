@@ -30,7 +30,10 @@ export function initStateLicensingTabs(): void {
 
     function apply(panelId: string): void {
       panels.forEach((panel) => {
-        panel.classList.toggle("state-section-panel--active", panel.id === panelId);
+        panel.classList.toggle(
+          "state-section-panel--active",
+          panel.id === panelId,
+        );
       });
       links.forEach((link) => {
         const active = link.getAttribute("href") === `#${panelId}`;

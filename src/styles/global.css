@@ -1108,7 +1108,9 @@
   display: block;
 }
 
-.state-licensing-main--tabs:not(:has(.state-section-panel:target, .state-section-panel--active))
+.state-licensing-main--tabs:not(
+    :has(.state-section-panel:target, .state-section-panel--active)
+  )
   .state-section-panel:first-of-type {
   display: block;
 }
