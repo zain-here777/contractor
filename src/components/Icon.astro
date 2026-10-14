@@ -1,0 +1,25 @@
+---
+import {
+  phosphorDuotonePaths,
+  type IconName,
+} from "../lib/icons/phosphor-duotone";
+
+export type { IconName };
+
+interface Props {
+  name: IconName;
+  class?: string;
+}
+
+const { name, class: className = "" } = Astro.props;
+---
+
+<svg
+  class:list={["icon", "icon--duotone", className]}
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 256 256"
+  fill="currentColor"
+  aria-hidden="true"
+  focusable="false"
+  set:html={phosphorDuotonePaths[name]}
+/>

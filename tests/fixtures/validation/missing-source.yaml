@@ -1,0 +1,6 @@
+state: Test
+state_code: TS
+verified_on: 2026-01-15
+sample_section:
+  threshold_usd: 1000
+  confidence: primary

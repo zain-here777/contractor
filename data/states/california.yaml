@@ -1,0 +1,165 @@
+# =====================================================================
+# CALIFORNIA - contractor licensing starter dataset (general rules)
+# Agency: Contractors State License Board (CSLB)
+# Collected: 2026-10-09 by AI-assisted research (Claude)
+# STATUS: DRAFT. Needs (1) human re-check against live CSLB pages and
+#         (2) review by a qualified U.S. reviewer before publishing.
+#
+# confidence values:
+#   primary   = read on an official CSLB page/publication
+#   secondary = only seen on a non-official site (do NOT publish as fact)
+#   confirm   = unclear or conflicting; needs board confirmation
+# =====================================================================
+
+state: California
+state_code: CA
+agency:
+  name: Contractors State License Board (CSLB)
+  parent: California Department of Consumer Affairs
+  website: https://www2.cslb.ca.gov/
+  phone: 800-321-2752
+  license_lookup: https://www2.cslb.ca.gov/OnlineServices/CheckLicenseII/CheckLicense.aspx
+verified_on: 2026-10-09
+license_count_and_classes:
+  value: "About 285,000 licensed contractors in 45 classifications"
+  confidence: primary
+  source: https://www.cslb.ca.gov/Resources/GuidesAndPublications/GetLicensedToBuild_ENG0525_ADA.pdf
+  note: "CSLB publication 'Get Licensed to Build', May 2025 edition, 'About CSLB' page"
+
+license_required:
+  threshold_usd: 1000
+  threshold_meaning: "Labor and materials combined. Splitting a job to stay under the limit is illegal."
+  license_required_regardless_if: ["work requires a building permit", "work requires hiring workers"]
+  effective_date: 2025-01-01
+  law_change: "AB 2622 (2024) raised the minor-work exemption from $500 to $1,000"
+  confidence: primary
+  sources:
+    - https://www.cslb.ca.gov/Resources/GuidesAndPublications/GetLicensedToBuild_ENG0525_ADA.pdf   # p.3-4 (Q3, Q4)
+    - https://www.cslb.ca.gov/Resources/Newsletters/2025/CLC_Newsletter_Winter2025.pdf
+  note: "Older websites still say $500. Always show the effective date."
+
+penalties_unlicensed:
+  first_offense: "Up to 6 months jail and/or $5,000 fine (misdemeanor); administrative fines $200-$15,000"
+  disaster_area: "Possible felony charges if no license in a declared disaster area"
+  confidence: primary
+  source: https://www.cslb.ca.gov/Resources/GuidesAndPublications/GetLicensedToBuild_ENG0525_ADA.pdf   # p.5 (Q7)
+
+qualifier_requirements:
+  min_age: 18
+  id_required: "Social Security number or ITIN"
+  residency_required: false
+  experience: "4 years journey-level experience within the last 10 years, in the classification applied for"
+  experience_credit: "Apprenticeship, technical training or education may count toward part of the 4 years, but at least 1 year of practical journey-level experience is required. Case-by-case. No credit for high school coursework."
+  experience_verification: "Someone other than the applicant must certify the experience on CSLB's 'Certification of Work Experience' form. Random audits happen."
+  confidence: primary
+  source: https://www.cslb.ca.gov/Resources/GuidesAndPublications/GetLicensedToBuild_ENG0525_ADA.pdf   # p.3, 7-8
+
+exams:
+  required: "Law and business exam + trade exam (no trade exam for C-61 Limited Specialty)"
+  format: "Computer-based, multiple choice"
+  vendor: PSI Exams
+  time_allowed: "3.5 hours per exam"
+  languages: "English; Spanish versions of 10 exams (Law and Business, B, C-8, C-9, C-15, C-27, C-33, C-36, C-39, C-54)"
+  retake_wait_days: 21
+  time_limit_to_pass: "18 months after CSLB accepts the application; after that the application is void and new fees are required"
+  results_valid: "5 years (if you pass one exam and fail the other, retake only the failed one)"
+  trade_exam_waiver: "Registrar may waive the trade exam if the person is/was within 5 years a qualifier in good standing in the same classification, or passed both exams in the same classification within 5 years; other waiver provisions exist (B&P Code 7065.1-7065.3). Reciprocity is case-by-case."
+  exam_fee_paid_to_psi: {value: null, confidence: confirm, note: "Not captured from an official page. A school website says $51.43 per exam - do not publish until confirmed."}
+  confidence: primary
+  sources:
+    - https://www.cslb.ca.gov/Resources/GuidesAndPublications/GetLicensedToBuild_ENG0525_ADA.pdf   # p.21-27
+    - https://www2.cslb.ca.gov/About_us/Public_Info_FAQ.aspx
+
+fees_usd:
+  application_fee: 450          # non-refundable, one classification
+  initial_license_fee_sole_owner: 200       # covers first 2-year period
+  initial_license_fee_non_sole_owner: 350   # corporations, LLCs, partnerships, etc.
+  additional_classification: 150
+  total_one_classification_sole_owner: 650
+  total_one_classification_non_sole_owner: 800
+  fbi_fingerprint_processing: 17
+  live_scan_operator_fee: "Set by each Live Scan site (not set by CSLB)"
+  doj_fingerprint_fee: {value: null, confidence: confirm}
+  active_renewal_sole_owner: {value: 450, confidence: primary, source: "https://www.cslb.ca.gov/Resources/IndustryBulletins/2021/New_Fee_Schedule.pdf", note: "2022 bulletin states the $450 sole-owner active renewal fee was not increased. Re-check current fee page."}
+  active_renewal_non_sole_owner: {value: null, confidence: confirm}
+  confidence: primary
+  sources:
+    - https://www.cslb.ca.gov/About_us/Library/Fees.aspx
+    - https://www2.cslb.ca.gov/About_us/Public_Info_FAQ.aspx
+  note: "CSLB says fees are subject to change. Display 'fees as of [date]'."
+
+bonds_and_insurance:
+  contractor_bond_usd: 25000          # increased by SB 607, effective 2023-01-01 (CSLB bond page)
+  contractor_bond_alternative: "Cashier's check in the same amount filed with the State"
+  qualifying_individual_bond_usd: 25000
+  qualifying_individual_bond_when: "License qualified by an RME, or by an RMO who owns less than 10% of voting stock/equity"
+  llc_worker_bond_usd: 100000        # in addition to the $25,000 contractor bond (LLC licenses only)
+  llc_liability_insurance: "$1 million aggregate for licenses with 5 or fewer personnel, plus $100,000 for each additional personnel, max $5 million (LLC licenses only)"
+  disciplinary_bond: "Not less than $25,000 and not more than 10x the contractor bond; on file at least 2 years"
+  bond_must_be_written_by: "Surety licensed by the California Department of Insurance"
+  bond_cancellation: "Bond cancels 30 days after CSLB receives the cancellation notice; license is suspended if not replaced"
+  confidence: primary
+  sources:
+    - https://www2.cslb.ca.gov/contractors/maintain_license/bond_information/bond_requirements.aspx
+    - https://www2.cslb.ca.gov/Contractors/Bond_Basics.aspx
+    - https://www.cslb.ca.gov/Resources/GuidesAndPublications/GetLicensedToBuild_ENG0525_ADA.pdf   # p.29-33
+  note: "Bond amounts changed on 2023-01-01. Older sites may show old amounts. Always show the effective date."
+
+workers_compensation:
+  required_if: ["you have California employees", "you employ home improvement salespersons", "the qualifier is an RME (employee)"]
+  always_required_classes: ["C-8 Concrete", "C-20 HVAC", "C-22 Asbestos Abatement", "C-39 Roofing", "Tree service (guide text: C-61/D-49; classification list shows C-49 Tree and Palm)"]
+  otherwise: "Submit an Exemption from Workers' Compensation certificate if you have no employees"
+  confidence: primary
+  tree_service_classification_note: {confidence: confirm, note: "Guide wording differs between C-61/D-49 and C-49. Confirm current class code with CSLB."}
+  source: https://www.cslb.ca.gov/Resources/GuidesAndPublications/GetLicensedToBuild_ENG0525_ADA.pdf   # p.16, 29, 34
+
+other_issuance_requirements:
+  items:
+    - "Fingerprints (mandatory criminal background check) for each person listed on the application"
+    - "Asbestos open-book exam (taken on CSLB website) before license is issued"
+  confidence: primary
+  source: https://www.cslb.ca.gov/Resources/GuidesAndPublications/GetLicensedToBuild_ENG0525_ADA.pdf   # p.20, 29
+
+license_term:
+  initial: "2 years from the last day of the month of issue (active or inactive)"
+  renewal_active: "2 years"
+  renewal_inactive: "4 years"
+  confidence: primary
+  source: https://www.cslb.ca.gov/Resources/GuidesAndPublications/GetLicensedToBuild_ENG0525_ADA.pdf   # p.31
+
+process_and_timing:
+  acknowledgment_letter: "CSLB sends an acknowledgment within 4-6 weeks (with application fee number and PIN)"
+  processing_times_page: https://www2.cslb.ca.gov/onlineservices/processingtimes/processingtimes.aspx   # updated weekly by CSLB
+  returned_application_deadline_days: 90
+  random_experience_audit: true
+  total_time_estimate: {value: null, confidence: confirm, note: "CSLB gives no fixed total. Use its weekly processing-times page. Do not publish a guessed number."}
+  confidence: primary
+  source: https://www2.cslb.ca.gov/About_us/Public_Info_FAQ.aspx
+
+classifications:
+  groups: ["A General Engineering", "B General Building", "B-2 Residential Remodeling", "C Specialty (42 classes)", "C-61/D Limited Specialty"]
+  apply_one_at_a_time: true
+  examples: {electrical: "C-10", plumbing: "C-36", hvac: "C-20", roofing: "C-39", landscaping: "C-27", painting: "C-33", flooring: "C-15", concrete: "C-8", solar: "C-46"}
+  confidence: primary
+  source: https://www.cslb.ca.gov/Resources/GuidesAndPublications/GetLicensedToBuild_ENG0525_ADA.pdf   # p.11, 35-53
+
+reciprocity:
+  recognizes_other_state_license: false
+  summary: "California does not recognize other states' licenses. CSLB has reciprocity agreements with some states: the trade exam may be waived, case-by-case. Applicants still pass the California law and business exam and certify work experience."
+  cslb_reciprocity_page_requirements: "Active license in good standing for the previous 5 years in a reciprocal state; verification form completed by the other state's board; CA application."
+  nascla: "NASCLA Commercial General Building exam can satisfy the trade exam for the CA 'B' classification if the applicant held a general building license in good standing for 5 years and requests the waiver."
+  list_of_reciprocal_states: {value: null, confidence: confirm, note: "List not captured. Pull from CSLB reciprocity page."}
+  confidence: primary
+  sources:
+    - https://www.cslb.ca.gov/Contractors/Applicants/Reciprocity/Reciprocity_Requirements.aspx
+    - https://www.cslb.ca.gov/Resources/GuidesAndPublications/GetLicensedToBuild_ENG0525_ADA.pdf   # p.5
+
+not_yet_collected:
+  - "Local business licenses / city permits"
+  - "Continuing education (California generally has none for contractors - CONFIRM)"
+  - "Home improvement salesperson (HIS) rules (registration $200 per CSLB fee page; details to verify)"
+  - "Mechanics lien rules (separate topic, California Civil Code)"
+  - "Sales tax on construction labor/materials (CDTFA)"
+
+changelog:
+  - {date: 2026-10-09, change: "First draft created from CSLB pages and publication. Needs human and expert review.", by: "Claude (AI research)"}

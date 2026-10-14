@@ -1,0 +1,43 @@
+{
+  "name": "contractor-site-starter",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build:astro": "astro build && pagefind --site dist",
+    "check:production": "node --experimental-strip-types scripts/check-production-build.ts",
+    "build": "npm run build:astro && npm run check:production",
+    "build:production": "npm run build:astro && npm run check:production -- --strict",
+    "validate:data": "node --experimental-strip-types scripts/validate-data.ts",
+    "test": "vitest run",
+    "lint": "eslint . && prettier --check \"**/*.{json,md,css,mjs,js,ts}\"",
+    "check:links": "node scripts/check-internal-links.mjs",
+    "generate:state-maps": "node scripts/generate-state-map-svgs.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/google-sans-flex": "^5.3.2",
+    "@phosphor-icons/core": "^2.1.1",
+    "astro": "7.3.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.0.0",
+    "d3-geo": "^3.1.1",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
+    "eslint-plugin-astro": "^1.0.0",
+    "pagefind": "^1.5.2",
+    "prettier": "^3.0.0",
+    "tailwindcss": "^4.3.3",
+    "topojson-client": "^3.1.0",
+    "typescript": "^5.0.0",
+    "typescript-eslint": "^8.0.0",
+    "us-atlas": "^3.0.1",
+    "vitest": "^3.0.0",
+    "yaml": "^2.8.0"
+  }
+}

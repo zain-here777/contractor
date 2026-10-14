@@ -1,0 +1,35 @@
+---
+import ToolPage from "../../../components/tools/ToolPage.astro";
+import BreakEvenCalculator from "../../../components/tools/BreakEvenCalculator.astro";
+import { relatedToolsExcept } from "../../../lib/tools/related-links";
+
+const toolPath = "/tools/break-even-calculator/";
+---
+
+<ToolPage
+  title="Break-even calculator"
+  description="Estimate how many jobs you need to cover fixed costs."
+  toolPath={toolPath}
+  relatedTools={relatedToolsExcept(toolPath)}
+>
+  <div slot="intro">
+    <p>
+      Break-even is where total contribution from jobs equals your fixed costs. This uses average
+      job revenue and average variable cost per job.
+    </p>
+    <p>TODO(user): explain how you track variable costs on real jobs.</p>
+  </div>
+  <BreakEvenCalculator slot="calculator" />
+  <div slot="formula">
+    <ul>
+      <li>Jobs needed = fixed costs ÷ (average job revenue − average job variable cost)</li>
+      <li>Revenue at break even = jobs needed × average job revenue</li>
+    </ul>
+  </div>
+  <div slot="example">
+    <p>
+      Fixed costs $6,000, average revenue $3,000 per job, variable cost $1,500 per job →
+      contribution $1,500 per job. $6,000 ÷ $1,500 = 4 jobs. Total revenue 4 × $3,000 = $12,000.
+    </p>
+  </div>
+</ToolPage>

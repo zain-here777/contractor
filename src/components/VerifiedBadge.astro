@@ -1,0 +1,18 @@
+---
+import type { FactConfidence } from "../lib/format-fact";
+
+interface Props {
+  confidence: FactConfidence;
+}
+
+const { confidence } = Astro.props;
+const isPrimary = confidence === "primary";
+const label = isPrimary ? "Verified from official source" : "Needs confirmation";
+---
+
+<span
+  class:list={["verified-badge", isPrimary ? "verified-badge--primary" : "verified-badge--confirm"]}
+  role="status"
+>
+  {label}
+</span>

@@ -1,0 +1,27 @@
+---
+import type { AtAGlanceItem } from "../lib/state-data/at-a-glance";
+
+interface Props {
+  items: AtAGlanceItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="state-at-a-glance panel panel--emphasis content-block" aria-labelledby="at-a-glance-heading">
+  <h2 id="at-a-glance-heading" class="state-at-a-glance__title">At a glance</h2>
+  <p class="state-at-a-glance__lead">
+    Key numbers and rules pulled from the sections below. Each item links back to
+    official sources in its section.
+  </p>
+  <dl class="state-glance-grid">
+    {
+      items.map((item) => (
+        <div class="state-glance-grid__pair">
+          <dt>{item.label}</dt>
+          <dd>{item.display}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>

@@ -1,0 +1,173 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import NotLegalAdvice from "../../components/NotLegalAdvice.astro";
+import StateLicensingHero from "../../components/StateLicensingHero.astro";
+import StateAgencyPanel from "../../components/StateAgencyPanel.astro";
+import StateAtAGlance from "../../components/StateAtAGlance.astro";
+import StatePageNav from "../../components/StatePageNav.astro";
+import StateSection from "../../components/StateSection.astro";
+import TexasTradeSection from "../../components/TexasTradeSection.astro";
+import StateHeroTrust from "../../components/StateHeroTrust.astro";
+import { getStateCardMeta } from "../../config/state-cards";
+import {
+  isStateExpertReviewed,
+  shouldNoindexStateLicensingPage,
+} from "../../config/state-licensing";
+import { buildAtAGlanceItems } from "../../lib/state-data/at-a-glance";
+import {
+  floridaFeeSectionOmitKeys,
+  isFloridaPartialDraft,
+  isPartialDraftState,
+  isTexasPartialDraft,
+  resolveStatePageSections,
+  sectionExistsInDocument,
+  TEXAS_TRADE_SECTION_KEYS,
+} from "../../lib/state-data/state-display";
+import { loadStateYaml, getStateSlugs } from "../../lib/state-data/load-states";
+import type { StateSection as StateSectionData } from "../../lib/state-data/types";
+import { join } from "node:path";
+
+export function getStaticPaths() {
+  const statesDir = join(process.cwd(), "data", "states");
+  return getStateSlugs(statesDir).map((slug) => ({
+    params: { state: slug },
+    props: { slug, stateData: loadStateYaml(statesDir, slug) },
+  }));
+}
+
+interface Props {
+  slug: string;
+  stateData: Record<string, unknown>;
+}
+
+const { slug, stateData } = Astro.props;
+const stateName = typeof stateData.state === "string" ? stateData.state : slug;
+const verifiedOn =
+  typeof stateData.verified_on === "string" ? stateData.verified_on : "Needs confirmation";
+const agency =
+  typeof stateData.agency === "object" && stateData.agency !== null
+    ? (stateData.agency as Record<string, unknown>)
+    : null;
+const floridaPartial = isFloridaPartialDraft(slug);
+const texasPartial = isTexasPartialDraft(slug);
+const partialDraft = isPartialDraftState(slug);
+const expertReviewed = isStateExpertReviewed(slug);
+const pageNoindex = shouldNoindexStateLicensingPage(slug);
+
+function getSection(key: string): StateSectionData | null {
+  if (!sectionExistsInDocument(stateData, key)) {
+    return null;
+  }
+  return stateData[key] as StateSectionData;
+}
+
+const atAGlanceItems = buildAtAGlanceItems(stateData, slug);
+const visibleSections = resolveStatePageSections(slug, stateData);
+
+const pageTitle = `${stateName} contractor licensing`;
+const description = floridaPartial
+  ? `Partial draft: Florida contractor licensing structure and qualification rules from official sources. Fees and other topics still being researched.`
+  : texasPartial
+    ? `Partial draft: Texas trade licensing (electricians and plumbers) from official TDLR and TSBPE pages. No single statewide general-contractor license confirmed yet.`
+    : `General contractor licensing rules for ${stateName}. Official sources and last checked dates on each section.`;
+const canonicalPath = `/licensing/${slug}/`;
+
+const heroLead = floridaPartial
+  ? "Partial draft from official DBPR and Florida Statutes sources. Only confirmed sections are shown as facts."
+  : texasPartial
+    ? "Partial draft from official TDLR and TSBPE pages. Texas licenses trades separately—confirmed sections only."
+    : "Contractor licensing overview with official sources on each section.";
+const stateCardMeta = getStateCardMeta(slug);
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={description}
+  canonicalPath={canonicalPath}
+  noindex={pageNoindex}
+>
+  <div class="state-licensing-page">
+  <StateLicensingHero
+    title={stateName}
+    lead={heroLead}
+    mapImageSrc={stateCardMeta.imageSrc}
+    mapImageAlt={stateCardMeta.imageAlt}
+  >
+    <StateHeroTrust
+      stateSlug={slug}
+      verifiedOn={verifiedOn}
+      expertReviewed={expertReviewed}
+    />
+  </StateLicensingHero>
+
+  {
+    partialDraft && (
+      <aside class="callout callout--muted content-block" role="note">
+        <p class="callout__text">
+          <strong>Partial draft.</strong> Some sections are still being researched
+          and have not been reviewed by an expert.
+        </p>
+      </aside>
+    )
+  }
+
+  <StateAtAGlance items={atAGlanceItems} />
+
+  {
+    agency && (
+      <StateAgencyPanel agency={agency} />
+    )
+  }
+
+  <div class="state-licensing-body content-block">
+    <div class="state-licensing-sidebar">
+      <StatePageNav sections={visibleSections} />
+    </div>
+    <div class="state-licensing-main state-licensing-main--tabs">
+  {
+    visibleSections.map(({ key, title, intro, anchorId }) => {
+      const section = getSection(key);
+      if (!section) {
+        return null;
+      }
+      if (texasPartial && TEXAS_TRADE_SECTION_KEYS.has(key)) {
+        return (
+          <TexasTradeSection
+            title={title}
+            intro={intro}
+            anchorId={anchorId}
+            sectionKey={key}
+            section={section}
+            verifiedOn={verifiedOn}
+          />
+        );
+      }
+      return (
+        <StateSection
+          title={title}
+          intro={intro}
+          anchorId={anchorId}
+          sectionKey={key}
+          stateSlug={slug}
+          section={section}
+          verifiedOn={verifiedOn}
+          omitRowKeys={
+            floridaPartial ? floridaFeeSectionOmitKeys(key) : undefined
+          }
+        />
+      );
+    })
+  }
+    </div>
+  </div>
+
+  <NotLegalAdvice
+    class="content-block state-licensing-footnote"
+    context={`${stateName} licensing overview.`}
+  />
+  </div>
+  <script>
+    import { initStateLicensingTabs } from "../../scripts/state-licensing-tabs.ts";
+    initStateLicensingTabs();
+  </script>
+</BaseLayout>

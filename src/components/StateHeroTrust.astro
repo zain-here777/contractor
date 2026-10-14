@@ -1,0 +1,52 @@
+---
+import VerifiedBadge from "./VerifiedBadge.astro";
+import { stateSourceAttributionLine } from "../config/state-licensing";
+
+interface Props {
+  stateSlug: string;
+  verifiedOn: string;
+  expertReviewed: boolean;
+}
+
+const { stateSlug, verifiedOn, expertReviewed } = Astro.props;
+const dateLabel = expertReviewed ? "Last verified" : "Last checked";
+const hasVerifiedDate = verifiedOn !== "Needs confirmation";
+---
+
+<div class="state-hero-trust">
+  {
+    !expertReviewed && (
+      <p class="state-hero-trust__attribution">
+        {stateSourceAttributionLine(stateSlug)}
+      </p>
+    )
+  }
+  <dl class="state-hero-trust__grid">
+    <div class="state-hero-trust__item">
+      <dt>{dateLabel}</dt>
+      <dd>
+        {
+          hasVerifiedDate ? (
+            <time datetime={verifiedOn}>{verifiedOn}</time>
+          ) : (
+            <span class="state-hero-trust__needs-confirm">Needs confirmation</span>
+          )
+        }
+      </dd>
+    </div>
+    <div class="state-hero-trust__item">
+      <dt>Review status</dt>
+      <dd class="state-hero-trust__status">
+        {
+          expertReviewed ? (
+            <VerifiedBadge confidence="primary" />
+          ) : (
+            <span class="state-hero-trust__pill state-hero-trust__pill--warn">
+              Not yet expert-reviewed
+            </span>
+          )
+        }
+      </dd>
+    </div>
+  </dl>
+</div>

@@ -1,0 +1,35 @@
+---
+import ExternalLink from "./ExternalLink.astro";
+
+interface Props {
+  sources: string | string[];
+  verifiedOn: string;
+  title?: string;
+}
+
+const { sources, verifiedOn, title = "Sources" } = Astro.props;
+const sourceList = Array.isArray(sources) ? sources : [sources];
+const verifiedDisplay =
+  verifiedOn !== "Needs confirmation" ? verifiedOn : "Needs confirmation";
+---
+
+<aside class="source-box" aria-labelledby="source-box-heading">
+  <h3 id="source-box-heading" class="source-box__title">{title}</h3>
+  <ul class="source-box__list">
+    {
+      sourceList.map((url) => (
+        <li>
+          <ExternalLink class="source-box__link" href={url} />
+        </li>
+      ))
+    }
+  </ul>
+  <p class="source-box__verified">
+    Last verified:{" "}
+    {verifiedOn !== "Needs confirmation" ? (
+      <time datetime={verifiedOn}>{verifiedOn}</time>
+    ) : (
+      <span>{verifiedDisplay}</span>
+    )}
+  </p>
+</aside>

@@ -1,0 +1,3 @@
+# Staging-safe default: replaced in dist/ after strict production finalize.
+User-agent: *
+Disallow: /

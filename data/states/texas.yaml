@@ -1,0 +1,176 @@
+# =====================================================================
+# TEXAS - contractor licensing starter dataset (PARTIAL DRAFT)
+# Agencies: Texas Department of Licensing and Regulation (TDLR) for
+#           electricians (and air conditioning/refrigeration, not yet
+#           collected); Texas State Board of Plumbing Examiners (TSBPE)
+#           for plumbers.
+# Collected: 2026-10-11 by AI-assisted research (Claude)
+# STATUS: PARTIAL. Only individual electrician (journeyman, master) and
+#         plumber (journeyman, tradesman-limited) basics are confirmed
+#         from official agency pages. The claim "no statewide general
+#         contractor license" is NOT yet confirmed on an official page.
+#         Do not publish confirm items as facts.
+#
+# Texas is different from California and Florida: there is no single
+# contractor license. Rules differ by trade and agency. The state page
+# template will need trade-specific sections (see electricians_* and
+# plumbers_* below).
+#
+# confidence values:
+#   primary = read on an official agency page
+#   confirm = unclear, conflicting, or not seen on an official page
+# =====================================================================
+
+state: Texas
+state_code: TX
+agency:
+  name: "Multiple agencies: TDLR (electricians, air conditioning/refrigeration) and TSBPE (plumbers)"
+  website: https://www.tdlr.texas.gov/
+  additional_websites:
+    - https://tsbpe.texas.gov/
+  license_lookup: null   # TODO(research): official TDLR and TSBPE license search URLs
+verified_on: 2026-10-11
+
+licensing_structure:
+  statewide_general_contractor_license:
+    value: "Many third-party sites say Texas has no statewide general-contractor license. NOT confirmed on an official page."
+    confidence: confirm
+    source: https://www.tdlr.texas.gov/
+  note: "Texas licenses certain trades at state level (electricians, plumbers and air conditioning/refrigeration contractors per third-party sites). Cities may add registration or permit rules. Confirm each point on official pages before publishing."
+  confidence: confirm
+  source: https://www.tdlr.texas.gov/
+
+agencies_by_trade:
+  electricians: "Texas Department of Licensing and Regulation (TDLR)"
+  plumbers: "Texas State Board of Plumbing Examiners (TSBPE)"
+  air_conditioning_refrigeration: {value: null, confidence: confirm, source: "https://www.tdlr.texas.gov/", note: "Agency and requirements not yet collected from official pages."}
+  confidence: primary
+  sources:
+    - https://www.tdlr.texas.gov/electricians/apply/individuals/journeyman-electrician.htm
+    - https://tsbpe.texas.gov/license-types/journeyman
+
+# ---------------------------------------------------------------------
+# ELECTRICIANS (TDLR)  - individual licenses
+# ---------------------------------------------------------------------
+electricians_experience_and_fees:
+  journeyman:
+    experience_to_apply_and_test: "At least 7,000 hours of on-the-job training under the supervision of a Master Electrician licensed in Texas. This lets you take the exam before reaching 8,000 hours."
+    experience_for_license: "8,000 hours of on-the-job training (as stated on the TDLR page)"
+    experience_proof: "Each supervising Master Electrician signs an Experience Verification Form. TDLR may contact people to verify the experience."
+    application_fee_usd: 30
+    application_fee_note: "Non-refundable"
+  master:
+    prerequisite: "Held a Journeyman Electrician license for at least two years. Journeyman Industrial Electrician experience cannot be used."
+    experience: "12,000 hours of on-the-job training under the supervision of a Master Electrician licensed in Texas"
+    experience_proof: "Experience Verification Form signed by each supervisor. If you hold or held a municipal or regional master electrician's license, you may verify your own on-the-job training for the years you held it."
+    application_fee_usd: 45
+    application_fee_note: "Non-refundable"
+  background_check: "People may ask TDLR to review their criminal background before applying (per TDLR page)."
+  confidence: primary
+  sources:
+    - https://www.tdlr.texas.gov/electricians/apply/individuals/journeyman-electrician.htm
+    - https://www.tdlr.texas.gov/electricians/apply/individuals/master-electrician.htm
+  note: "Hours and application fees read on TDLR pages on 2026-10-11. TDLR changes fees periodically. Show 'fees as of' date."
+
+electricians_exam_and_renewal:
+  exam_provider: {value: "PSI (per third-party sites)", confidence: confirm, source: "https://www.tdlr.texas.gov/electricians/"}
+  exam_fee_usd: {value: null, confidence: confirm, source: "https://www.tdlr.texas.gov/electricians/", note: "Third-party sites say $78. Not confirmed on an official page."}
+  renewal: {value: null, confidence: confirm, source: "https://www.tdlr.texas.gov/electricians/", note: "Third-party sites say annual renewal with 4 hours of continuing education. Not confirmed."}
+  electrical_contractor_license: {value: null, confidence: confirm, source: "https://www.tdlr.texas.gov/electricians/", note: "Business license rules (master electrician requirement, insurance, fee) not confirmed on an official page."}
+  other_electrician_licenses: {value: null, confidence: confirm, source: "https://www.tdlr.texas.gov/electricians/", note: "Apprentice, residential wireman, maintenance, sign and industrial licenses not collected."}
+  confidence: confirm
+  source: https://www.tdlr.texas.gov/electricians/
+
+# ---------------------------------------------------------------------
+# PLUMBERS (TSBPE) - individual licenses
+# ---------------------------------------------------------------------
+plumbers_journeyman:
+  eligibility_to_take_exam:
+    - "Currently registered as a Plumber's Apprentice, or licensed as a Tradesman Plumber-Limited in Texas, or licensed as a Journeyman or Master Plumber in another state"
+    - "At least 8,000 hours of experience in the plumbing trade"
+    - "Completion of the required training program (48 hours; not required if you hold a Journeyman or Master license from another state)"
+  application: "Complete application with supporting documents and Employer Certification Form(s), plus the fee, submitted to the TSBPE"
+  fingerprints: "All applicants in Texas must submit fingerprint data (one-time requirement)"
+  fees_usd:
+    exam: 40
+    initial_license: 40
+    renewal: 40
+    late_renewal_under_90_days: 20
+    late_renewal_over_90_days: 40
+  fee_note: "If you hold both a Journeyman and a Master license, you pay only the Master renewal fee."
+  scope: "May install, change, repair, service or renovate plumbing under the supervision of a Responsible Master Plumber."
+  confidence: primary
+  source: https://tsbpe.texas.gov/license-types/journeyman
+
+plumbers_tradesman_limited:
+  eligibility_to_take_exam:
+    - "Registered as a Plumber's Apprentice in Texas, or hold a current Journeyman or Master Plumber license issued in another state"
+    - "At least 4,000 hours of experience in the plumbing trade"
+    - "Completion of the required training program (24 hours; not required if you hold a Journeyman or Master license from another state)"
+  application: "Complete application with supporting documents and Employer Certification Form(s), plus the fee, submitted to the TSBPE"
+  fingerprints: "Required (one-time)"
+  fees_usd:
+    exam: 36
+    initial_license: 35
+    renewal: 35
+    late_renewal_under_90_days: 17.5
+    late_renewal_over_90_days: 35
+  scope: "May construct, install, repair, service or renovate plumbing for one- and two-family dwellings under the supervision of a Responsible Master Plumber. Direct supervision means the Journeyman or Master is on the job site at all times you are performing plumbing work."
+  confidence: primary
+  source: https://tsbpe.texas.gov/license-types/tradesman/
+
+plumbers_not_yet_confirmed:
+  master_plumber: {value: null, confidence: confirm, source: "https://tsbpe.texas.gov/license-types/", note: "Eligibility and fees not read on the official page. Third-party sites disagree on the experience requirement (e.g. 4,000 hours vs 'at least one year' as journeyman) and on the fee."}
+  plumbers_apprentice: {value: null, confidence: confirm, source: "https://tsbpe.texas.gov/license-types/", note: "Registration requirements and fees not collected."}
+  plumbing_contractor_business_rules: {value: null, confidence: confirm, source: "https://tsbpe.texas.gov/", note: "Third-party sites mention a Responsible Master Plumber requirement for plumbing businesses. Not confirmed."}
+  confidence: confirm
+  source: https://tsbpe.texas.gov/license-types/
+
+# ---------------------------------------------------------------------
+# Standard sections, not yet collected for Texas as a whole
+# ---------------------------------------------------------------------
+license_required:
+  value: null
+  confidence: confirm
+  source: https://www.tdlr.texas.gov/
+  note: "Which work needs a state license, and any dollar thresholds or exemptions, NOT confirmed. City rules not collected."
+
+penalties_unlicensed:
+  value: null
+  confidence: confirm
+  source: https://www.tdlr.texas.gov/
+
+bonds_and_insurance:
+  value: null
+  confidence: confirm
+  source: https://www.tdlr.texas.gov/
+  note: "Insurance and bond rules by trade not collected."
+
+workers_compensation:
+  value: null
+  confidence: confirm
+  source: https://www.tdlr.texas.gov/
+
+reciprocity:
+  value: null
+  confidence: confirm
+  source: https://www.tdlr.texas.gov/
+  note: "Not collected. TSBPE pages mention other-state licenses can shorten training for plumbers (see plumbers sections); a full reciprocity list was not captured."
+
+local_rules:
+  value: null
+  confidence: confirm
+  source: https://www.tdlr.texas.gov/
+  note: "City and county registration, permit and licensing rules (for example in Houston, Dallas, Austin) not collected. Use each city's official site."
+
+not_yet_collected:
+  - "Official statement on whether Texas has a statewide general contractor license"
+  - "Air conditioning and refrigeration contractor license (TDLR)"
+  - "Electrical contractor (business) license, exam provider and fees, renewal and continuing education"
+  - "Master plumber, plumbers apprentice and plumbing contractor/business rules (TSBPE)"
+  - "Other trades: roofing, painting, handyman, remodeling (state versus local)"
+  - "City registration rules for the largest cities"
+  - "Official license lookup URLs"
+
+changelog:
+  - {date: 2026-10-11, change: "Partial first draft. Individual electrician (journeyman, master) and plumber (journeyman, tradesman-limited) basics from official TDLR and TSBPE pages. All other topics flagged.", by: "Claude (AI research)"}

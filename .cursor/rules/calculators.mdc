@@ -1,0 +1,15 @@
+---
+description: Rules for calculator code and tests.
+globs: src/lib/calculators/**,tests/**,src/components/tools/**
+alwaysApply: false
+---
+
+# Calculator rules
+
+- Calculators are pure functions with typed inputs and outputs. No DOM access, no network calls, no hidden constants.
+- Validate inputs: reject negative numbers, division by zero, margins of 100% or more. Return clear error messages, not NaN.
+- Round only for display, not inside calculations. Use 2 decimals for money.
+- Every calculator needs unit tests with hand-checked known answers (see docs/TASKS.md).
+- Show the formula in plain English on the tool page, plus one worked example.
+- Add a short limits note: "Estimates only. Not tax, legal or financial advice."
+- Any fee, rate or threshold used by a calculator must come from data/, never hard-coded.

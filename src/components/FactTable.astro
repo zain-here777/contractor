@@ -1,0 +1,57 @@
+---
+import FactCellValue from "./FactCellValue.astro";
+import { factNeedsConfirmation, formatFactValue, type FactRow } from "../lib/format-fact";
+
+interface Props {
+  caption: string;
+  rows: FactRow[];
+  /** When false, caption is screen-reader only (section heading already names the table). */
+  showCaption?: boolean;
+  /** Stack label/value on small screens for easier reading. */
+  stackedOnMobile?: boolean;
+}
+
+const {
+  caption,
+  rows,
+  showCaption = true,
+  stackedOnMobile = false,
+} = Astro.props;
+const tableId = `fact-table-${caption.toLowerCase().replace(/\s+/g, "-")}`;
+---
+
+<div
+  class:list={[
+    "fact-table-wrapper",
+    stackedOnMobile && "fact-table-wrapper--stacked-sm",
+    !showCaption && "fact-table-wrapper--in-panel",
+  ]}
+>
+  <table
+    class="fact-table"
+    aria-labelledby={tableId}
+  >
+    <caption
+      id={tableId}
+      class:list={[showCaption ? "fact-table__caption" : "sr-only"]}
+    >
+      {caption}
+    </caption>
+    <tbody>
+      {
+        rows.map((row) => {
+          const display = formatFactValue(row);
+          const needsConfirmation = factNeedsConfirmation(row);
+          return (
+            <tr>
+              <th scope="row">{row.label}</th>
+              <td>
+                <FactCellValue display={display} needsConfirmation={needsConfirmation} />
+              </td>
+            </tr>
+          );
+        })
+      }
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,89 @@
+---
+import ExternalLink from "./ExternalLink.astro";
+import { formatSourceLinkLabel } from "../lib/state-data/source-labels";
+
+interface Props {
+  agency: Record<string, unknown>;
+}
+
+const { agency } = Astro.props;
+
+const name = typeof agency.name === "string" ? agency.name : null;
+const website = typeof agency.website === "string" ? agency.website : null;
+const phone = typeof agency.phone === "string" ? agency.phone : null;
+const licenseLookup =
+  typeof agency.license_lookup === "string"
+    ? agency.license_lookup
+    : agency.license_lookup === null
+      ? null
+      : undefined;
+const extraSites = Array.isArray(agency.additional_websites)
+  ? agency.additional_websites.filter((url): url is string => typeof url === "string")
+  : [];
+---
+
+<section class="panel state-agency content-block" aria-labelledby="agency-heading">
+  <h2 id="agency-heading" class="state-agency__title">Licensing agency</h2>
+  <p class="state-agency__lead">
+    Official contact points from our state data file. Use these to verify rules
+    and lookups.
+  </p>
+  <dl class="state-agency-grid">
+    {name && (
+      <>
+        <dt>Agency</dt>
+        <dd>{name}</dd>
+      </>
+    )}
+    {
+      website && (
+        <>
+          <dt>Website</dt>
+          <dd>
+            <ExternalLink
+              href={website}
+              label={formatSourceLinkLabel(website)}
+            />
+          </dd>
+        </>
+      )
+    }
+    {
+      extraSites.map((url) => (
+        <Fragment>
+          <dt>Website</dt>
+          <dd>
+            <ExternalLink href={url} />
+          </dd>
+        </Fragment>
+      ))
+    }
+    {
+      phone && (
+        <>
+          <dt>Phone</dt>
+          <dd>
+            <a href={`tel:${phone.replace(/\D/g, "")}`}>{phone}</a>
+          </dd>
+        </>
+      )
+    }
+    {
+      licenseLookup ? (
+        <>
+          <dt>License lookup</dt>
+          <dd>
+            <ExternalLink href={licenseLookup} label="Official license lookup" />
+          </dd>
+        </>
+      ) : (
+        licenseLookup === null && (
+          <>
+            <dt>License lookup</dt>
+            <dd>Needs confirmation</dd>
+          </>
+        )
+      )
+    }
+  </dl>
+</section>

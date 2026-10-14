@@ -1,0 +1,66 @@
+---
+import ToolResult from "./ToolResult.astro";
+---
+
+<form id="overhead-rate-form" class="tool-form">
+  <fieldset class="tool-form__fieldset">
+    <legend class="tool-form__legend">Inputs</legend>
+    <label class="field-label">
+      Yearly overhead (USD)
+      <input
+        class="field"
+        name="yearlyOverhead"
+        type="number"
+        min="0"
+        step="0.01"
+        inputmode="decimal"
+        required
+      />
+    </label>
+    <label class="field-label">
+      Billable hours per year
+      <input
+        class="field"
+        name="billableHours"
+        type="number"
+        min="0"
+        step="1"
+        inputmode="numeric"
+        required
+      />
+    </label>
+  </fieldset>
+  <button type="submit" class="btn btn-primary">Calculate</button>
+</form>
+<ToolResult id="overhead-rate-result" />
+
+<script>
+  import { calculateOverheadRate } from "../../lib/calculators/overhead-rate.ts";
+  import { formatUsd } from "../../lib/calculators/display.ts";
+  import { getFormNumber, renderResultPanel } from "./tool-form-client.ts";
+
+  const form = document.getElementById("overhead-rate-form");
+  const result = document.getElementById("overhead-rate-result");
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!(form instanceof HTMLFormElement) || !(result instanceof HTMLElement)) {
+      return;
+    }
+
+    const calc = calculateOverheadRate({
+      yearlyOverhead: getFormNumber(form, "yearlyOverhead") ?? NaN,
+      billableHours: getFormNumber(form, "billableHours") ?? NaN,
+    });
+
+    if (!calc.ok) {
+      renderResultPanel(result, { type: "error", message: calc.error });
+      return;
+    }
+
+    renderResultPanel(result, {
+      type: "result",
+      html: `<p><strong>Overhead per billable hour:</strong> ${formatUsd(calc.value.overheadPerHour)}</p>`,
+    });
+  });
+</script>

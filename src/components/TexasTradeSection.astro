@@ -1,0 +1,96 @@
+---
+import FactCellValue from "./FactCellValue.astro";
+import SourceBox from "./SourceBox.astro";
+import { getSectionSources } from "../lib/state-data/load-states";
+import { buildSourceBoxTitle } from "../lib/state-data/source-labels";
+import {
+  buildTexasTradeGroups,
+  displayTexasTradeCell,
+  sanitizeRowsForPublicDisplay,
+} from "../lib/state-data/texas-display";
+import { factNeedsConfirmation } from "../lib/format-fact";
+import type { StateSection } from "../lib/state-data/types";
+
+interface Props {
+  title: string;
+  intro: string;
+  anchorId: string;
+  sectionKey: string;
+  section: StateSection;
+  verifiedOn: string;
+}
+
+const { title, intro, anchorId, section, verifiedOn } = Astro.props;
+const sources = getSectionSources(section);
+const groups = buildTexasTradeGroups(section);
+const sourceBoxTitle = buildSourceBoxTitle(title, sources);
+const sectionNote =
+  typeof section.note === "string" ? section.note : undefined;
+const feeNote =
+  typeof section.fee_note === "string" ? section.fee_note : undefined;
+---
+
+<section
+  id={anchorId}
+  class="state-section panel state-section-panel"
+  aria-labelledby={`${anchorId}-heading`}
+  tabindex="-1"
+>
+  <header class="state-section__header">
+    <h2 id={`${anchorId}-heading`} class="state-section__title">{title}</h2>
+  </header>
+  <p class="state-section__intro">{intro}</p>
+  {sectionNote && <p class="state-section__note">{sectionNote}</p>}
+  <p class="state-section__note">
+    Fees as of{" "}
+    {verifiedOn !== "Needs confirmation" ? (
+      <time datetime={verifiedOn}>{verifiedOn}</time>
+    ) : (
+      <span>Needs confirmation</span>
+    )}
+    .
+  </p>
+  {
+    groups.map(({ groupLabel, rows }) => {
+      const publicRows = sanitizeRowsForPublicDisplay(rows);
+      const tableId = `${anchorId}-${groupLabel.toLowerCase().replace(/\s+/g, "-")}`;
+      return (
+        <div class="state-section__group">
+          <h3 class="state-section__subtitle">{groupLabel}</h3>
+          <div class="fact-table-wrapper fact-table-wrapper--stacked-sm fact-table-wrapper--in-panel">
+            <table class="fact-table" aria-labelledby={tableId}>
+              <caption id={tableId} class="sr-only">
+                {title} — {groupLabel}
+              </caption>
+              <tbody>
+                {
+                  publicRows.map((row) => {
+                    const display = displayTexasTradeCell(row);
+                    const needsConfirmation = factNeedsConfirmation(row);
+                    return (
+                      <tr>
+                        <th scope="row">{row.label}</th>
+                        <td>
+                          <FactCellValue
+                            display={display}
+                            needsConfirmation={needsConfirmation}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    })
+  }
+  {feeNote && <p class="state-section__note">{feeNote}</p>}
+  {
+    sources.length > 0 && (
+      <SourceBox title={sourceBoxTitle} sources={sources} verifiedOn={verifiedOn} />
+    )
+  }
+</section>

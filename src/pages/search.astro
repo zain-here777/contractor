@@ -1,0 +1,34 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+---
+
+<BaseLayout
+  title="Search"
+  description="Search contractor licensing guides and tools on this site."
+  canonicalPath="/search/"
+>
+  <link slot="head" href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <PageHero
+    title="Search"
+    lead="Find licensing pages and calculators. The index updates on each production build."
+  />
+  <div class="panel panel--emphasis site-search-panel">
+    <div id="search" class="site-search"></div>
+    <noscript>
+      <p class="site-search-panel__fallback">
+        Search requires JavaScript. Browse <a href="/licensing/">licensing</a> or{" "}
+        <a href="/tools/">tools</a>.
+      </p>
+    </noscript>
+  </div>
+</BaseLayout>
+
+<script src="/pagefind/pagefind-ui.js" type="module"></script>
+<script is:inline>
+  window.addEventListener("DOMContentLoaded", () => {
+    if (typeof PagefindUI !== "undefined") {
+      new PagefindUI({ element: "#search", showImages: false });
+    }
+  });
+</script>

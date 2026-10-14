@@ -1,0 +1,61 @@
+---
+import ToolResult from "./ToolResult.astro";
+import type { LicenseCheckConfig } from "../../lib/license-check/types";
+
+interface Props {
+  config: LicenseCheckConfig;
+}
+
+const { config } = Astro.props;
+const configJson = JSON.stringify(config);
+---
+
+<form id="license-required-form" class="tool-form" data-config={configJson}>
+  <fieldset class="tool-form__fieldset">
+    <legend class="tool-form__legend">Job details ({config.stateName})</legend>
+    <p class="tool-form__hint">
+      Threshold in our data file:{" "}
+      {config.thresholdUsd.toLocaleString("en-US", { style: "currency", currency: "USD" })}{" "}
+      (effective {config.effectiveDate}). Labor and materials combined.
+    </p>
+    <label class="field-label">
+      Total job value — labor + materials (USD)
+      <input
+        class="field"
+        name="jobValueUsd"
+        type="number"
+        min="0"
+        step="0.01"
+        inputmode="decimal"
+        required
+      />
+    </label>
+    <label class="field-label">
+      Does the work need a building permit?
+      <select class="field" name="needsPermit" required>
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+      </select>
+    </label>
+    <label class="field-label">
+      Will you hire workers for this job?
+      <select class="field" name="hiresWorkers" required>
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+      </select>
+    </label>
+  </fieldset>
+  <button type="submit" class="btn btn-primary">Check</button>
+</form>
+<ToolResult id="license-required-result" />
+
+<script>
+  import { initLicenseRequiredChecker } from "./license-required-checker.client.ts";
+  import type { LicenseCheckConfig } from "../../lib/license-check/types.ts";
+
+  const form = document.getElementById("license-required-form");
+  if (form instanceof HTMLFormElement && form.dataset.config) {
+    const config = JSON.parse(form.dataset.config) as LicenseCheckConfig;
+    initLicenseRequiredChecker(config);
+  }
+</script>

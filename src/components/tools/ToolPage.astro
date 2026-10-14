@@ -1,0 +1,85 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../Icon.astro";
+import NotLegalAdvice from "../NotLegalAdvice.astro";
+import PageHero from "../PageHero.astro";
+import type { RelatedToolLink } from "../../lib/tools/types";
+
+interface Props {
+  title: string;
+  description: string;
+  toolPath: string;
+  relatedTools: RelatedToolLink[];
+}
+
+const { title, description, toolPath, relatedTools } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} canonicalPath={toolPath}>
+  <article class="tool-page">
+    <PageHero title={title} lead={description}>
+      <div class="tool-intro tool-intro--hero">
+        <slot name="intro" />
+      </div>
+    </PageHero>
+
+    <section class="tool-panel panel panel--emphasis" aria-labelledby="calculator-heading">
+      <h2 id="calculator-heading" class="panel__title">Calculator</h2>
+      <div class="tool-calculator">
+        <slot name="calculator" />
+      </div>
+    </section>
+
+    <div class="content-stack">
+      <section class="tool-panel panel" aria-labelledby="formula-heading">
+        <h2 id="formula-heading" class="panel__title">Formula (in words)</h2>
+        <div class="tool-detail prose-site">
+          <slot name="formula" />
+        </div>
+      </section>
+
+      <section class="tool-panel panel" aria-labelledby="example-heading">
+        <h2 id="example-heading" class="panel__title">Worked example</h2>
+        <div class="tool-detail prose-site">
+          <slot name="example" />
+        </div>
+      </section>
+    </div>
+
+    <aside class="callout callout--muted content-block" aria-label="Calculator limits">
+      <p class="callout__text">
+        <strong>Limits:</strong> Estimates only. Not tax, legal, or financial advice.
+      </p>
+    </aside>
+
+    {
+      relatedTools.length > 0 && (
+        <section class="content-block" aria-labelledby="related-heading">
+          <div class="section-heading">
+            <h2 id="related-heading" class="section-heading__title">Related tools</h2>
+          </div>
+          <ul class="card-grid card-grid--2">
+            {relatedTools.map((link) => (
+              <li>
+                <a class="card card--link card--horizontal" href={link.href}>
+                  <span class="card__icon-wrap card__icon-wrap--accent">
+                    <Icon name="calculator" />
+                  </span>
+                  <span class="card__body">
+                    <span class="card__title">{link.label}</span>
+                  </span>
+                  <Icon name="arrow-right" class="card__chevron" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <NotLegalAdvice
+      class="content-block"
+      context="Calculator and checker results."
+    />
+  </article>
+</BaseLayout>

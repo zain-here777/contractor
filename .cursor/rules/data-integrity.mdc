@@ -1,0 +1,20 @@
+---
+description: Rules for editing licensing data files. Facts must have sources and dates.
+globs: data/**/*.yaml,data/**/*.json,scripts/validate*
+alwaysApply: false
+---
+
+# Data integrity rules
+
+- Every top-level section that contains facts must have a `confidence` field (`primary` or `confirm`) and at least one `source` / `sources` URL.
+- `primary` means read on an official government page or publication. `confirm` means unclear, conflicting, or not seen on an official page.
+- A fact with `value: null` or `confidence: confirm` must never be shown as a number or rule on the site. Show "Needs confirmation".
+- Keep `verified_on` as an ISO date (YYYY-MM-DD).
+- Do not edit existing values, sources or confidence without a new official source from the user.
+- The validator (`npm run validate:data`) must fail when:
+  1. a section has facts but no source URL,
+  2. a source is not a valid https URL,
+  3. `verified_on` is missing, invalid or in the future,
+  4. `confidence` is missing or not one of `primary` / `confirm`.
+- The validator should warn (not fail) when `verified_on` is older than 180 days.
+- Keep state files in `data/states/<state-name>.yaml` (lowercase, hyphenated).

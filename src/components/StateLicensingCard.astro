@@ -1,0 +1,45 @@
+---
+import Icon from "./Icon.astro";
+import {
+  getStateCardMeta,
+  stateCardStatusLabel,
+} from "../config/state-cards";
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const meta = getStateCardMeta(slug);
+const statusLabel = stateCardStatusLabel(meta.status);
+---
+
+<a class="state-card card card--link" href={`/licensing/${slug}/`}>
+  <div class="state-card__media">
+    <img
+      class="state-card__image"
+      src={meta.imageSrc}
+      alt={meta.imageAlt}
+      width="400"
+      height="240"
+      loading="lazy"
+      decoding="async"
+    />
+    <span
+      class:list={[
+        "state-card__badge",
+        meta.status === "available" ? "badge-ok" : "badge-warn",
+      ]}
+    >
+      {statusLabel}
+    </span>
+  </div>
+  <div class="state-card__body">
+    <h2 class="state-card__title">{meta.name}</h2>
+    <p class="state-card__text">{meta.summary}</p>
+    <span class="state-card__action">
+      View licensing guide
+      <Icon name="arrow-right" class="state-card__action-icon" />
+    </span>
+  </div>
+</a>

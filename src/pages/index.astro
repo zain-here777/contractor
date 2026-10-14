@@ -1,0 +1,208 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import PageHero from "../components/PageHero.astro";
+import type { IconName } from "../components/Icon.astro";
+
+const homeDescription =
+  "Every fact links to an official source and shows when it was last checked. Free tools for contractors and people starting a trade business.";
+
+const calculatorLinks = [
+  {
+    href: "/tools/markup-margin-calculator/",
+    label: "Markup vs margin",
+    description: "Convert between markup and margin without mixing the formulas.",
+    icon: "calculator" as IconName,
+  },
+  {
+    href: "/tools/hourly-rate-calculator/",
+    label: "Hourly rate",
+    description: "Cover labor, overhead, and profit in your billable rate.",
+    icon: "calculator" as IconName,
+  },
+  {
+    href: "/tools/break-even-calculator/",
+    label: "Break-even",
+    description: "See how much revenue you need to cover fixed and variable costs.",
+    icon: "calculator" as IconName,
+  },
+  {
+    href: "/tools/overhead-rate-calculator/",
+    label: "Overhead rate",
+    description: "Turn monthly overhead into a rate you can load onto jobs.",
+    icon: "calculator" as IconName,
+  },
+];
+
+const trustPillars = [
+  {
+    title: "Official sources only",
+    text: "We read licensing board pages and publications—not forums or summaries.",
+    icon: "shield" as IconName,
+  },
+  {
+    title: "Source and date on every fact",
+    text: "You can see where a number came from and when we last checked it.",
+    icon: "clipboard" as IconName,
+  },
+  {
+    title: "Needs confirmation when unsure",
+    text: "We show a clear label rather than guess on fees, bonds, or thresholds.",
+    icon: "check-circle" as IconName,
+  },
+];
+---
+
+<BaseLayout
+  title="U.S. contractor licensing guides and tools"
+  description={homeDescription}
+>
+  <div class="home-page">
+    <!-- TODO(user): final hero wording -->
+    <PageHero
+      headingId="home-hero-heading"
+      title="Clear, sourced answers on U.S. contractor licensing."
+      lead={homeDescription}
+      note="California licensing overview is available now. Florida is a partial draft; more states follow as data is checked."
+    >
+      <Fragment slot="actions">
+        <a class="btn btn-pill-solid btn--icon" href="/licensing/">
+          <span>Find your state</span>
+          <Icon name="arrow-right" />
+        </a>
+        <a class="btn btn-pill-outline" href="/tools/">Try a free tool</a>
+      </Fragment>
+    </PageHero>
+
+    <section class="home-section" aria-labelledby="home-doors-heading">
+      <div class="section-heading">
+        <h2 id="home-doors-heading" class="section-heading__title">Start here</h2>
+        <p class="section-heading__lead">
+          Pick a path—licensing rules, trade guides, or startup planning.
+        </p>
+      </div>
+      <div class="card-grid card-grid--3">
+        <a class="card card--link" href="/licensing/">
+          <span class="card__icon-wrap card__icon-wrap--accent">
+            <Icon name="map-pin" />
+          </span>
+          <h3 class="card__title">Find your state</h3>
+          <p class="card__text">
+            California overview plus Florida partial draft—fees and sources where confirmed.
+          </p>
+          <span class="card__action">
+            View states
+            <Icon name="arrow-right" class="card__action-icon" />
+          </span>
+        </a>
+        <article class="card card--muted">
+          <span class="card__icon-wrap">
+            <Icon name="wrench" />
+          </span>
+          <h3 class="card__title">Find your trade</h3>
+          <p class="card__text">
+            Rules for electricians, plumbers, HVAC, and related trades.
+          </p>
+          <p class="card__footer">
+            <span class="badge-warn">Coming soon</span>
+          </p>
+        </article>
+        <article class="card card--muted">
+          <span class="card__icon-wrap">
+            <Icon name="clipboard" />
+          </span>
+          <h3 class="card__title">Plan your startup costs</h3>
+          <p class="card__text">
+            Estimate what it takes to get licensed and open for business.
+          </p>
+          <p class="card__footer">
+            <span class="badge-warn">Coming soon</span>
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="home-section" aria-labelledby="home-featured-heading">
+      <div class="featured-card">
+        <div class="featured-card__content">
+          <p class="featured-card__label">Featured tool</p>
+          <h2 id="home-featured-heading" class="featured-card__title">
+            Do I need a license for this job? (California)
+          </h2>
+          <p class="featured-card__text">
+            Check California CSLB minor-work threshold, permit, and worker rules
+            using verified data from our state file.
+          </p>
+          <a class="btn btn-primary btn--icon" href="/tools/do-i-need-a-license/">
+            <Icon name="check-circle" />
+            <span>Open the checker</span>
+          </a>
+        </div>
+        <div class="featured-card__aside" aria-hidden="true">
+          <Icon name="shield" class="featured-card__graphic" />
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section" aria-labelledby="home-data-heading">
+      <div class="section-heading">
+        <h2 id="home-data-heading" class="section-heading__title">
+          How we handle data
+        </h2>
+        <p class="section-heading__lead">
+          Built for contractors who need to trust the numbers before they bid or
+          hire.
+        </p>
+      </div>
+      <ul class="card-grid card-grid--3 home-trust-grid">
+        {
+          trustPillars.map((item) => (
+            <li class="card card--flat">
+              <span class="card__icon-wrap card__icon-wrap--accent">
+                <Icon name={item.icon} />
+              </span>
+              <h3 class="card__title">{item.title}</h3>
+              <p class="card__text">{item.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="home-section__cta">
+        <a class="btn btn-secondary btn--icon" href="/methodology/">
+          <Icon name="clipboard" />
+          <span>Read our methodology</span>
+        </a>
+      </p>
+    </section>
+
+    <section class="home-section" aria-labelledby="home-tools-heading">
+      <div class="section-heading">
+        <h2 id="home-tools-heading" class="section-heading__title">Free tools</h2>
+        <p class="section-heading__lead">
+          Calculators use tested formulas—estimates only, not tax or legal advice.
+        </p>
+      </div>
+      <ul class="card-grid card-grid--2 home-tools-grid">
+        {
+          calculatorLinks.map((tool) => (
+            <li>
+              <a class="card card--link card--horizontal" href={tool.href}>
+                <span class="card__icon-wrap card__icon-wrap--accent">
+                  <Icon name={tool.icon} />
+                </span>
+                <span class="card__body">
+                  <span class="card__title">{tool.label}</span>
+                  <span class="card__text">{tool.description}</span>
+                </span>
+                <Icon name="arrow-right" class="card__chevron" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="home-section__cta">
+        <a href="/tools/">View all tools</a>
+      </p>
+    </section>
+  </div>
+</BaseLayout>

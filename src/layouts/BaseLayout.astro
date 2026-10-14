@@ -1,0 +1,94 @@
+---
+import "../styles/global.css";
+import StructuredData from "../components/StructuredData.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { isDevOnlyPath, siteAssets, siteBrand } from "../config/site";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+  /** When true, adds noindex (also set automatically for /dev/ routes). */
+  noindex?: boolean;
+  /** Optional extra classes on `<main>` (rare; layout width is shared sitewide). */
+  mainClass?: string;
+}
+
+const {
+  title,
+  description,
+  canonicalPath = Astro.url.pathname,
+  noindex = false,
+  mainClass,
+} = Astro.props;
+const siteOrigin = Astro.site?.origin ?? Astro.url.origin;
+const canonicalUrl = new URL(canonicalPath, siteOrigin).href;
+const defaultOgImageUrl = new URL(siteAssets.defaultOgImagePath, siteOrigin).href;
+const pageNoindex = noindex || isDevOnlyPath(canonicalPath);
+/** Default on: removed from dist/ only after strict production finalize. */
+const stagingNoindex = process.env.PUBLIC_STAGING_NOINDEX !== "false";
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: siteBrand.organizationName,
+  url: siteOrigin,
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {
+      stagingNoindex && (
+        <meta
+          name="robots"
+          content="noindex, nofollow"
+          data-build-staging-noindex
+        />
+      )
+    }
+    {
+      pageNoindex && (
+        <meta name="robots" content="noindex, nofollow" />
+      )
+    }
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href={siteAssets.faviconPath} type="image/svg+xml" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteBrand.name} />
+    <meta property="og:image" content={defaultOgImageUrl} />
+    <meta property="og:image:alt" content={siteAssets.defaultOgImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={defaultOgImageUrl} />
+    <StructuredData data={organizationJsonLd} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <SiteHeader />
+
+    <div class="ad-slot-placeholder" aria-hidden="true" data-ad-slot="reserved"></div>
+
+    <main
+      id="main-content"
+      class:list={["site-main", mainClass]}
+      tabindex="-1"
+      data-pagefind-body
+    >
+      <div class="site-page">
+        <slot />
+      </div>
+    </main>
+
+    <SiteFooter />
+  </body>
+</html>

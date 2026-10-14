@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import PageHero from "../components/PageHero.astro";
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page you requested was not found."
+  canonicalPath="/404/"
+  noindex
+>
+  <div class="not-found">
+    <PageHero
+      title="Page not found"
+      lead="We could not find that page. It may have moved, or the link may be wrong."
+    >
+      <Fragment slot="actions">
+        <a class="btn btn-pill-solid btn--icon" href="/search/">
+          <span>Search the site</span>
+          <Icon name="search" />
+        </a>
+        <a class="btn btn-pill-outline" href="/">Back to home</a>
+      </Fragment>
+    </PageHero>
+    <section class="content-block" aria-labelledby="not-found-links">
+      <h2 id="not-found-links" class="section-heading__title">Popular links</h2>
+      <ul class="card-grid card-grid--2">
+        <li>
+          <a class="card card--link card--horizontal" href="/licensing/">
+            <span class="card__icon-wrap card__icon-wrap--accent">
+              <Icon name="map-pin" />
+            </span>
+            <span class="card__body">
+              <span class="card__title">State licensing</span>
+            </span>
+            <Icon name="arrow-right" class="card__chevron" />
+          </a>
+        </li>
+        <li>
+          <a class="card card--link card--horizontal" href="/tools/">
+            <span class="card__icon-wrap card__icon-wrap--accent">
+              <Icon name="tools" />
+            </span>
+            <span class="card__body">
+              <span class="card__title">Tools</span>
+            </span>
+            <Icon name="arrow-right" class="card__chevron" />
+          </a>
+        </li>
+        <li>
+          <a class="card card--link card--horizontal" href="/methodology/">
+            <span class="card__icon-wrap card__icon-wrap--accent">
+              <Icon name="clipboard" />
+            </span>
+            <span class="card__body">
+              <span class="card__title">Methodology</span>
+            </span>
+            <Icon name="arrow-right" class="card__chevron" />
+          </a>
+        </li>
+        <li>
+          <a class="card card--link card--horizontal" href="/contact/">
+            <span class="card__icon-wrap card__icon-wrap--accent">
+              <Icon name="shield" />
+            </span>
+            <span class="card__body">
+              <span class="card__title">Contact</span>
+            </span>
+            <Icon name="arrow-right" class="card__chevron" />
+          </a>
+        </li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

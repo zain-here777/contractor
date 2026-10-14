@@ -1,0 +1,39 @@
+---
+interface Props {
+  title: string;
+  /** Short summary under the title (meta description or custom lead). */
+  lead?: string;
+  /** Optional id for the h1 (for aria-labelledby on the hero section). */
+  headingId?: string;
+  /** Optional fine print below actions / slot content (home page availability note, etc.). */
+  note?: string;
+}
+
+const { title, lead, headingId, note } = Astro.props;
+const hasDefaultSlot = Astro.slots.has("default");
+const hasActionsSlot = Astro.slots.has("actions");
+---
+
+<section class="home-hero-band" aria-labelledby={headingId}>
+  <div class="home-hero home-hero--landing">
+    <h1 id={headingId} class="home-hero__title">
+      {title}
+    </h1>
+    {lead && <p class="home-hero__lead">{lead}</p>}
+    {
+      hasDefaultSlot && (
+        <div class="home-hero__meta">
+          <slot />
+        </div>
+      )
+    }
+    {
+      hasActionsSlot && (
+        <div class="home-hero__actions">
+          <slot name="actions" />
+        </div>
+      )
+    }
+    {note && <p class="home-hero__note">{note}</p>}
+  </div>
+</section>

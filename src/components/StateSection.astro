@@ -1,0 +1,80 @@
+---
+import FactTable from "./FactTable.astro";
+import SourceBox from "./SourceBox.astro";
+import VerifiedBadge from "./VerifiedBadge.astro";
+import { isStateExpertReviewed } from "../config/state-licensing";
+import { getSectionSources } from "../lib/state-data/load-states";
+import { buildSourceBoxTitle } from "../lib/state-data/source-labels";
+import { sectionToFactRows } from "../lib/state-data/section-rows";
+import {
+  applyFloridaFactRowRules,
+  isFloridaPartialDraft,
+  isTexasPartialDraft,
+  resolvePublicSectionNote,
+} from "../lib/state-data/state-display";
+import { sanitizeRowsForPublicDisplay } from "../lib/state-data/texas-display";
+import type { FactConfidence } from "../lib/format-fact";
+import type { StateSection } from "../lib/state-data/types";
+
+interface Props {
+  title: string;
+  intro: string;
+  anchorId: string;
+  sectionKey: string;
+  stateSlug: string;
+  section: StateSection;
+  verifiedOn: string;
+  omitRowKeys?: Set<string>;
+}
+
+const {
+  title,
+  intro,
+  anchorId,
+  sectionKey,
+  stateSlug,
+  section,
+  verifiedOn,
+  omitRowKeys,
+} = Astro.props;
+const confidence = (section.confidence ?? "confirm") as FactConfidence;
+const sources = getSectionSources(section);
+const floridaPartial = isFloridaPartialDraft(stateSlug);
+const showVerifiedBadge = isStateExpertReviewed(stateSlug);
+let rows = sectionToFactRows(section, { omitKeys: omitRowKeys });
+if (floridaPartial) {
+  rows = applyFloridaFactRowRules(sectionKey, rows, { omitKeys: omitRowKeys });
+}
+if (isTexasPartialDraft(stateSlug)) {
+  rows = sanitizeRowsForPublicDisplay(rows);
+}
+const sectionNote = resolvePublicSectionNote(section, sectionKey, stateSlug);
+const sourceBoxTitle = buildSourceBoxTitle(title, sources);
+---
+
+<section
+  id={anchorId}
+  class="state-section panel state-section-panel"
+  aria-labelledby={`${anchorId}-heading`}
+  tabindex="-1"
+>
+  <header class="state-section__header">
+    <h2 id={`${anchorId}-heading`} class="state-section__title">{title}</h2>
+    {showVerifiedBadge && <VerifiedBadge confidence={confidence} />}
+  </header>
+  <p class="state-section__intro">{intro}</p>
+  {sectionNote && <p class="state-section__note">{sectionNote}</p>}
+  <div class="state-section__facts">
+    <FactTable
+      caption={title}
+      rows={rows}
+      showCaption={false}
+      stackedOnMobile={true}
+    />
+  </div>
+  {
+    sources.length > 0 && (
+      <SourceBox title={sourceBoxTitle} sources={sources} verifiedOn={verifiedOn} />
+    )
+  }
+</section>

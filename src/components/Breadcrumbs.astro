@@ -1,0 +1,50 @@
+---
+import StructuredData from "./StructuredData.astro";
+
+export type Crumb = {
+  label: string;
+  href?: string;
+};
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+const siteOrigin = Astro.site?.origin ?? Astro.url.origin;
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((item, index) => {
+    const entry: Record<string, unknown> = {
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+    };
+    if (item.href) {
+      entry.item = new URL(item.href, siteOrigin).href;
+    }
+    return entry;
+  }),
+};
+---
+
+<StructuredData data={breadcrumbJsonLd} />
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol class="breadcrumbs__list">
+    {
+      items.map((item, index) => {
+        const isLast = index === items.length - 1;
+        return (
+          <li class="breadcrumbs__item">
+            {isLast || !item.href ? (
+              <span aria-current={isLast ? "page" : undefined}>{item.label}</span>
+            ) : (
+              <a href={item.href}>{item.label}</a>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>

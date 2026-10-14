@@ -1,0 +1,138 @@
+# =====================================================================
+# FLORIDA - contractor licensing starter dataset (PARTIAL DRAFT)
+# Agency: Dept. of Business and Professional Regulation (DBPR),
+#         Construction Industry Licensing Board (CILB)
+# Collected: 2026-10-11 by AI-assisted research (Claude)
+# STATUS: PARTIAL. Only the license structure and the qualification
+#         (experience) rules are confirmed from official pages.
+#         Fees, exams, bond/insurance, work threshold, penalties and
+#         reciprocity are NOT confirmed. Do not publish those as facts.
+#
+# confidence values:
+#   primary = read on an official page (DBPR site or flsenate.gov)
+#   confirm = unclear, conflicting, or not seen on an official page
+# =====================================================================
+
+state: Florida
+state_code: FL
+agency:
+  name: Department of Business and Professional Regulation (DBPR), Construction Industry Licensing Board (CILB)
+  website: https://www2.myfloridalicense.com/construction-industry/
+  license_lookup: null   # TODO(research): find the official DBPR license search URL on the DBPR site
+verified_on: 2026-10-11
+
+license_types:
+  certified: "Statewide license (valid anywhere in Florida)"
+  registered: "Valid only in the local jurisdiction where the contractor registered"
+  confidence: primary
+  source: https://www2.myfloridalicense.com/construction-industry/
+  note: "Categories include general, building, residential, roofing, air-conditioning, plumbing, pool/spa, solar and specialty trades. Exact category names and codes not yet recorded; take them from the DBPR page."
+
+official_forms:
+  items:
+    - "CILB 1: application to take the exam"
+    - "CILB 5-A: certified general contractor application (individual)"
+    - "CILB 32: reciprocity"
+    - "CILB 10: endorsement"
+  confidence: primary
+  source: https://www2.myfloridalicense.com/construction-industry/
+  note: "Form numbers recorded from the DBPR page on 2026-10-11. Re-check numbers and current versions before publishing."
+
+qualifier_requirements:
+  min_age: 18
+  good_moral_character: "Required. The board may refuse only if there is a substantial connection between the lack of good moral character and the professional responsibilities of a certified contractor, and the finding is supported by clear and convincing evidence."
+  experience_options:
+    - "Option 1: Bachelor's degree from an accredited 4-year college in an appropriate field of engineering, architecture or building construction, plus 1 year of proven experience in the category (2,000 person-hours counts as full-time)."
+    - "Option 2: At least 4 years of active experience as a skilled worker (learned the trade through apprenticeship and able to command a mechanic's rate) or as a foreman. At least 1 year must be as a foreman."
+    - "Option 3: A combination: (a) 1 year as a foreman plus 3 years of accredited college-level credits; or (b) 1 year as a skilled worker, 1 year as a foreman and 2 years of credits; or (c) 2 years as a skilled worker, 1 year as a foreman and 1 year of credits."
+  upgrade_paths:
+    - "Certified residential to certified building: 3 years of proven experience in the classification, and pass the building exam"
+    - "Certified residential or certified building to certified general: 4 years of proven experience in the classification, and pass the general exam"
+    - "Air-conditioning Class C to Class B: 3 years; Class C to Class A: 4 years; Class B to Class A: 1 year"
+    - "Pool servicing to residential pool: 3 years; pool servicing to commercial pool: 4 years; residential pool to commercial pool: 1 year"
+    - "Pool/spa servicing: 60 hours of board-approved instruction plus 1 year of proven experience"
+  confidence: primary
+  source: https://www.flsenate.gov/Laws/Statutes/2024/489.111
+  note: "Source is Florida Statutes s. 489.111, 2024 edition (including 2025C). Newer editions (2025, 2026) exist. Check for amendments before publishing. The Senate site says its statute text is unverified for official purposes."
+
+fees_usd:
+  current_fee_values:
+    value: null
+    confidence: confirm
+    source: https://www2.myfloridalicense.com/construction-industry/
+    note: "Current application, exam, initial license and renewal fees NOT confirmed. Find the current fee schedule on the DBPR site and the current text of Florida Administrative Code rule 61G4-12.009."
+  statutory_maximums_seen:
+    confidence: confirm
+    source: https://www.flsenate.gov/Laws/Statutes/2024/0489.109
+    note: "From s. 489.109, read on a mirror site (florida.public.law), not on flsenate.gov. Certification: initial application fee up to $150 (up to $350 if exam cost included); initial certification and renewal fees up to $250. Registration: application up to $100; initial registration and renewal up to $200. Business organization application and renewal $50. Inactive status up to $50. These are CAPS, not the actual fees. Re-check on flsenate.gov."
+  rule_notice_values_seen:
+    confidence: confirm
+    source: https://flrules.org/gateway/notice_Files.asp?ID=2020624
+    note: "A rulemaking notice file on flrules.org quotes rule 61G4-12.009: application and exam fee $335 (non-refundable); registration application $100; biennial renewal $200; initial certification or registration fee $200 ($100 if paid in the second year of the biennium); business organization $50. It may be old or proposed text. Do NOT publish until checked against the current rule."
+
+exams:
+  value: null
+  confidence: confirm
+  source: https://www2.myfloridalicense.com/construction-industry/
+  note: "Exam content, provider, exam fee, passing score, retake rules NOT confirmed. Secondary sites disagree on the exam provider."
+
+license_required:
+  value: null
+  confidence: confirm
+  source: https://www2.myfloridalicense.com/construction-industry/
+  note: "Dollar threshold or exemptions for unlicensed work NOT confirmed. One secondary site claims $2,500 tied to a 2025 law change. Not verified. Check Florida Statutes ch. 489 (s. 489.103 exemptions) and the 2025 and 2026 session laws."
+
+penalties_unlicensed:
+  value: null
+  confidence: confirm
+  source: https://www.flsenate.gov/Laws/Statutes/2024/Chapter489
+  note: "Not collected yet."
+
+bonds_and_insurance:
+  value: null
+  confidence: confirm
+  source: https://www.flsenate.gov/Laws/Statutes/2024/Chapter489
+  note: "Financial responsibility, insurance and any bond requirements NOT collected."
+
+workers_compensation:
+  value: null
+  confidence: confirm
+  source: https://www.flsenate.gov/Laws/Statutes/2024/Chapter489
+  note: "Not collected yet."
+
+license_term:
+  value: null
+  confidence: confirm
+  source: https://www2.myfloridalicense.com/construction-industry/
+  note: "Renewal fees are described as biennial in rule text seen, but the license term and renewal dates are not confirmed."
+
+reciprocity:
+  value: null
+  confidence: confirm
+  source: https://www2.myfloridalicense.com/construction-industry/
+  note: "DBPR lists reciprocity documents (form CILB 32 and a 'Reciprocity and Substantially Equivalent Exams' document). The list of states and conditions was NOT captured. Secondary sites disagree (one says 3 states, another names only Georgia)."
+
+known_conflicts_on_secondary_sites:
+  confidence: confirm
+  source: https://www2.myfloridalicense.com/construction-industry/
+  note: "For information only. Do not publish these values. Check the official DBPR page instead."
+  items:
+    - "Application fee: shown as $145-$305, $149 and $249 on different sites"
+    - "Exam fee: $295, or $135 registration plus $80 site fee"
+    - "Exam provider: 'Professional Testing' on one site, 'Pearson VUE' on others"
+    - "Work limit needing a license: $2,500 on one site"
+
+not_yet_collected:
+  - "Current fee schedule (DBPR)"
+  - "Exam details and provider"
+  - "Unlicensed-work threshold and exemptions (s. 489.103)"
+  - "Penalties for unlicensed work (s. 489.127)"
+  - "Financial responsibility, insurance, bonds"
+  - "Workers' compensation rules"
+  - "License term and renewal; continuing education"
+  - "Reciprocity list and conditions"
+  - "Local registration and permit rules"
+  - "Official license lookup URL"
+
+changelog:
+  - {date: 2026-10-11, change: "Partial first draft: license structure, qualification rules and official forms confirmed; all other topics flagged for confirmation.", by: "Claude (AI research)"}

@@ -1,0 +1,37 @@
+---
+import ToolPage from "../../../components/tools/ToolPage.astro";
+import MarkupMarginCalculator from "../../../components/tools/MarkupMarginCalculator.astro";
+import { relatedToolsExcept } from "../../../lib/tools/related-links";
+
+const toolPath = "/tools/markup-margin-calculator/";
+---
+
+<ToolPage
+  title="Markup vs margin calculator"
+  description="Convert between markup and margin, and calculate job price from cost."
+  toolPath={toolPath}
+  relatedTools={relatedToolsExcept(toolPath)}
+>
+  <div slot="intro">
+    <p>
+      Markup is added to your cost. Margin is the share of the final price that is profit. They are
+      related but not the same number.
+    </p>
+    <p>TODO(user): add a short note from a real contractor on when they use markup vs margin.</p>
+  </div>
+  <MarkupMarginCalculator slot="calculator" />
+  <div slot="formula">
+    <ul>
+      <li>Price = cost × (1 + markup)</li>
+      <li>Margin = (price − cost) ÷ price</li>
+      <li>Price from target margin = cost ÷ (1 − margin)</li>
+      <li>Markup = margin ÷ (1 − margin)</li>
+    </ul>
+  </div>
+  <div slot="example">
+    <p>
+      Cost $1,000 and markup 25% → price $1,250. Margin on that price is 20% because profit $250 ÷
+      $1,250 = 0.20.
+    </p>
+  </div>
+</ToolPage>

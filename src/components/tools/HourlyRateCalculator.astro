@@ -1,0 +1,98 @@
+---
+import ToolResult from "./ToolResult.astro";
+---
+
+<form id="hourly-rate-form" class="tool-form">
+  <fieldset class="tool-form__fieldset">
+    <legend class="tool-form__legend">Inputs</legend>
+    <label class="field-label">
+      Pay goal (USD per year)
+      <input
+        class="field"
+        name="payGoal"
+        type="number"
+        min="0"
+        step="0.01"
+        inputmode="decimal"
+        required
+      />
+    </label>
+    <label class="field-label">
+      Yearly overhead (USD)
+      <input
+        class="field"
+        name="yearlyOverhead"
+        type="number"
+        min="0"
+        step="0.01"
+        inputmode="decimal"
+        required
+      />
+    </label>
+    <label class="field-label">
+      Profit goal (USD per year)
+      <input
+        class="field"
+        name="profitGoal"
+        type="number"
+        min="0"
+        step="0.01"
+        inputmode="decimal"
+        required
+      />
+    </label>
+    <label class="field-label">
+      Billable hours per year
+      <input
+        class="field"
+        name="billableHours"
+        type="number"
+        min="0"
+        step="1"
+        inputmode="numeric"
+        required
+      />
+    </label>
+  </fieldset>
+  <button type="submit" class="btn btn-primary">Calculate</button>
+</form>
+<ToolResult id="hourly-rate-result" />
+
+<script>
+  import { calculateHourlyRate } from "../../lib/calculators/hourly-rate.ts";
+  import { formatUsd } from "../../lib/calculators/display.ts";
+  import { getFormNumber, renderResultPanel } from "./tool-form-client.ts";
+
+  const form = document.getElementById("hourly-rate-form");
+  const result = document.getElementById("hourly-rate-result");
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!(form instanceof HTMLFormElement) || !(result instanceof HTMLElement)) {
+      return;
+    }
+
+    const calc = calculateHourlyRate({
+      payGoal: getFormNumber(form, "payGoal") ?? NaN,
+      yearlyOverhead: getFormNumber(form, "yearlyOverhead") ?? NaN,
+      profitGoal: getFormNumber(form, "profitGoal") ?? NaN,
+      billableHours: getFormNumber(form, "billableHours") ?? NaN,
+    });
+
+    if (!calc.ok) {
+      renderResultPanel(result, { type: "error", message: calc.error });
+      return;
+    }
+
+    const warnings =
+      calc.warnings?.map((warning) => `<li>${warning}</li>`).join("") ?? "";
+
+    renderResultPanel(result, {
+      type: calc.warnings?.length ? "warn" : "result",
+      html: `<ul>
+        <li><strong>Hourly rate:</strong> ${formatUsd(calc.value.hourlyRate)}</li>
+        <li><strong>Total annual target:</strong> ${formatUsd(calc.value.totalAnnualTarget)}</li>
+      </ul>${warnings ? `<ul class="tool-warnings">${warnings}</ul>` : ""}`,
+    });
+  });
+</script>

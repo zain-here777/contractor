@@ -1,0 +1,21 @@
+---
+import ExternalLink from "./ExternalLink.astro";
+import { isHttpUrl } from "../lib/links/external-url";
+
+interface Props {
+  display: string;
+  needsConfirmation?: boolean;
+}
+
+const { display, needsConfirmation = false } = Astro.props;
+---
+
+{
+  needsConfirmation ? (
+    <span class="fact-table__needs-confirmation">{display}</span>
+  ) : isHttpUrl(display) ? (
+    <ExternalLink class="source-box__link" href={display} />
+  ) : (
+    display
+  )
+}

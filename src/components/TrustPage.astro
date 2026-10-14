@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "./PageHero.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+}
+
+const { title, description, path } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} canonicalPath={path}>
+  <PageHero title={title} lead={description} />
+  <article class="prose-site content-block">
+    <slot />
+  </article>
+</BaseLayout>

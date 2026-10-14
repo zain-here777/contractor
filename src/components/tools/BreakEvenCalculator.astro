@@ -1,0 +1,83 @@
+---
+import ToolResult from "./ToolResult.astro";
+---
+
+<form id="break-even-form" class="tool-form">
+  <fieldset class="tool-form__fieldset">
+    <legend class="tool-form__legend">Inputs</legend>
+    <label class="field-label">
+      Fixed costs (USD)
+      <input
+        class="field"
+        name="fixedCosts"
+        type="number"
+        min="0"
+        step="0.01"
+        inputmode="decimal"
+        required
+      />
+    </label>
+    <label class="field-label">
+      Average job revenue (USD)
+      <input
+        class="field"
+        name="averageJobRevenue"
+        type="number"
+        min="0"
+        step="0.01"
+        inputmode="decimal"
+        required
+      />
+    </label>
+    <label class="field-label">
+      Average job variable cost (USD)
+      <input
+        class="field"
+        name="averageJobVariableCost"
+        type="number"
+        min="0"
+        step="0.01"
+        inputmode="decimal"
+        required
+      />
+    </label>
+  </fieldset>
+  <button type="submit" class="btn btn-primary">Calculate</button>
+</form>
+<ToolResult id="break-even-result" />
+
+<script>
+  import { calculateBreakEven } from "../../lib/calculators/break-even.ts";
+  import { formatUsd } from "../../lib/calculators/display.ts";
+  import { getFormNumber, renderResultPanel } from "./tool-form-client.ts";
+
+  const form = document.getElementById("break-even-form");
+  const result = document.getElementById("break-even-result");
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!(form instanceof HTMLFormElement) || !(result instanceof HTMLElement)) {
+      return;
+    }
+
+    const calc = calculateBreakEven({
+      fixedCosts: getFormNumber(form, "fixedCosts") ?? NaN,
+      averageJobRevenue: getFormNumber(form, "averageJobRevenue") ?? NaN,
+      averageJobVariableCost: getFormNumber(form, "averageJobVariableCost") ?? NaN,
+    });
+
+    if (!calc.ok) {
+      renderResultPanel(result, { type: "error", message: calc.error });
+      return;
+    }
+
+    renderResultPanel(result, {
+      type: "result",
+      html: `<ul>
+        <li><strong>Jobs needed to break even:</strong> ${calc.value.jobsNeeded.toLocaleString("en-US", { maximumFractionDigits: 2 })}</li>
+        <li><strong>Total revenue at break even:</strong> ${formatUsd(calc.value.totalRevenue)}</li>
+        <li><strong>Contribution per job:</strong> ${formatUsd(calc.value.contributionPerJob)}</li>
+      </ul>`,
+    });
+  });
+</script>

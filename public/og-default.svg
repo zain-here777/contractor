@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Default share image placeholder">
+  <title>Default share image placeholder</title>
+  <rect width="1200" height="630" fill="#f5f7fa"/>
+  <rect x="48" y="48" width="1104" height="534" rx="12" fill="#ffffff" stroke="#e3e7ec" stroke-width="2"/>
+  <rect x="96" y="120" width="72" height="72" rx="8" fill="#1d4f9c"/>
+  <path fill="#ffffff" d="M108 138h48v6H108v-6zm0 18h48v6H108v-6zm0 18h32v6h-32v-6z"/>
+  <text x="192" y="168" fill="#1b2430" font-family="system-ui, sans-serif" font-size="42" font-weight="600">
+    Contractor licensing &amp; tools
+  </text>
+  <text x="192" y="228" fill="#556070" font-family="system-ui, sans-serif" font-size="28">
+    Sourced licensing guides and free calculators
+  </text>
+  <text x="96" y="520" fill="#556070" font-family="system-ui, sans-serif" font-size="22">
+    TODO(user): replace with your brand share image before launch
+  </text>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" role="img" aria-label="State map placeholder">
+  <defs>
+    <linearGradient id="def-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f5f7fa"/>
+      <stop offset="100%" stop-color="#e8eef8"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="240" fill="url(#def-bg)"/>
+  <circle cx="200" cy="120" r="56" fill="#1d4f9c" fill-opacity="0.08" stroke="#1d4f9c" stroke-width="1.5" stroke-opacity="0.35"/>
+  <path fill="#1d4f9c" fill-opacity="0.15" d="M200 88a32 32 0 1 1 0 64 32 32 0 0 1 0-64zm0 12a20 20 0 1 0 0 40 20 20 0 0 0 0-40z"/>
+</svg>

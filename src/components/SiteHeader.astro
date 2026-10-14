@@ -1,0 +1,77 @@
+---
+import Icon from "./Icon.astro";
+import { isNavLinkActive, primaryNavLinks, siteBrand } from "../config/site";
+
+const pathname = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="site-header__float">
+    <div class="site-header__pill">
+      <a class="site-brand site-brand--pill" href="/" aria-label={siteBrand.name}>
+        <span class="site-brand__mark site-brand__mark--pill" aria-hidden="true">
+          <Icon name="shield" class="site-brand__icon site-brand__icon--pill" />
+        </span>
+      </a>
+
+      <span class="site-header__divider site-header__divider--desktop" aria-hidden="true"></span>
+
+      <nav class="site-nav site-nav--desktop site-nav--pill" aria-label="Primary">
+        {
+          primaryNavLinks.map((link) => {
+            const active = isNavLinkActive(pathname, link.href);
+            return (
+              <a
+                class:list={[
+                  "site-nav__link site-nav__link--pill",
+                  active && "site-nav__link--active",
+                ]}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+              >
+                {link.label}
+              </a>
+            );
+          })
+        }
+      </nav>
+
+      <div class="site-header__actions site-header__actions--desktop site-header__actions--pill">
+        <a class="btn btn-pill-solid btn--compact site-header__cta" href="/licensing/">
+          Find your state
+        </a>
+      </div>
+
+      <details class="site-nav-drawer site-nav-drawer--pill">
+        <summary class="site-nav-drawer__summary site-nav-drawer__summary--pill">
+          <span class="site-nav-drawer__label">Menu</span>
+          <span class="site-nav-drawer__icon" aria-hidden="true" />
+        </summary>
+        <div class="site-nav-drawer__panel">
+          <nav class="site-nav site-nav--mobile" aria-label="Primary">
+            {
+              primaryNavLinks.map((link) => {
+                const active = isNavLinkActive(pathname, link.href);
+                return (
+                  <a
+                    class:list={[
+                      "site-nav__link",
+                      active && "site-nav__link--active",
+                    ]}
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })
+            }
+          </nav>
+          <a class="btn btn-pill-solid btn--compact site-nav-drawer__cta" href="/licensing/">
+            Find your state
+          </a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>

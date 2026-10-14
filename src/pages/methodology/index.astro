@@ -1,0 +1,40 @@
+---
+import TrustPage from "../../components/TrustPage.astro";
+---
+
+<TrustPage
+  title="Methodology"
+  description="How we collect, verify, and update contractor licensing information."
+  path="/methodology/"
+>
+  <h2>Official sources only</h2>
+  <p>
+    Facts in our state data files come from official government pages or publications. We link the
+    source on every section and record when we last verified it.
+  </p>
+
+  <h2>Source and date on every fact</h2>
+  <p>
+    Each section in a state file includes source URL(s) and a file-level <code>verified_on</code>{" "}
+    date. When we show a fact on the site, we show where it came from and when we checked it.
+  </p>
+
+  <h2>“Needs confirmation” rule</h2>
+  <p>
+    If a value is missing, unclear, or not read on an official page, we mark it{" "}
+    <code>confidence: confirm</code> or <code>value: null</code> in the data file. The site shows{" "}
+    <strong>Needs confirmation</strong> instead of guessing a number or rule.
+  </p>
+
+  <h2>Update schedule</h2>
+  <p>
+    TODO(user): set your review schedule (for example, quarterly checks of high-traffic states, or
+    after known law changes). Describe who re-checks official pages and how corrections are
+    published.
+  </p>
+
+  <p>
+    Automated checks: <code>npm run validate:data</code> enforces source URLs, dates, and confidence
+    values in <code>data/states/</code> before we build.
+  </p>
+</TrustPage>

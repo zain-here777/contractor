@@ -1,0 +1,34 @@
+---
+import ToolPage from "../../../components/tools/ToolPage.astro";
+import HourlyRateCalculator from "../../../components/tools/HourlyRateCalculator.astro";
+import { relatedToolsExcept } from "../../../lib/tools/related-links";
+
+const toolPath = "/tools/hourly-rate-calculator/";
+---
+
+<ToolPage
+  title="Contractor hourly rate calculator"
+  description="Estimate an hourly rate from pay, overhead, profit goal, and billable hours."
+  toolPath={toolPath}
+  relatedTools={relatedToolsExcept(toolPath)}
+>
+  <div slot="intro">
+    <p>
+      This tool divides your annual pay target, overhead, and profit goal by the billable hours you
+      expect to work in a year.
+    </p>
+    <p>TODO(user): add practical guidance on realistic billable hours for your trade.</p>
+  </div>
+  <HourlyRateCalculator slot="calculator" />
+  <div slot="formula">
+    <p>
+      Hourly rate = (pay goal + yearly overhead + profit goal) ÷ billable hours per year
+    </p>
+  </div>
+  <div slot="example">
+    <p>
+      Pay $80,000 + overhead $40,000 + profit $20,000 = $140,000 total. Divided by 1,200 billable
+      hours → about $116.67 per hour.
+    </p>
+  </div>
+</ToolPage>

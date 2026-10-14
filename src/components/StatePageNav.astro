@@ -1,0 +1,39 @@
+---
+interface SectionLink {
+  title: string;
+  anchorId: string;
+}
+
+interface Props {
+  sections: SectionLink[];
+}
+
+const { sections } = Astro.props;
+---
+
+{
+  sections.length > 0 && (
+    <nav
+      class="state-page-nav"
+      aria-labelledby="state-page-nav-heading"
+      data-state-section-nav
+    >
+      <h2 id="state-page-nav-heading" class="state-page-nav__title">
+        Sections
+      </h2>
+      <ol class="state-page-nav__list" role="list">
+        {sections.map(({ title, anchorId }) => (
+          <li>
+            <a
+              class="state-page-nav__link"
+              href={`#${anchorId}`}
+              data-state-section-link={anchorId}
+            >
+              {title}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}

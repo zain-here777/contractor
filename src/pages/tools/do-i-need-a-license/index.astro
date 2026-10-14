@@ -1,0 +1,74 @@
+---
+import ToolPage from "../../../components/tools/ToolPage.astro";
+import LicenseRequiredChecker from "../../../components/tools/LicenseRequiredChecker.astro";
+import { relatedToolsExcept } from "../../../lib/tools/related-links";
+import { loadStateYaml } from "../../../lib/state-data/load-states";
+import { licenseCheckConfigFromState } from "../../../lib/license-check/config-from-state";
+import { join } from "node:path";
+
+const toolPath = "/tools/do-i-need-a-license/";
+const california = loadStateYaml(join(process.cwd(), "data", "states"), "california");
+const configResult = licenseCheckConfigFromState("california", california);
+---
+
+{
+  configResult.ok ? (
+    <ToolPage
+      title="Do I need a license for this job? (California)"
+      description="Check California CSLB minor-work threshold, permit, and worker rules using verified data from our state file."
+      toolPath={toolPath}
+      relatedTools={[
+        ...relatedToolsExcept(toolPath),
+        { href: "/licensing/california/", label: "California licensing overview" },
+      ]}
+    >
+      <div slot="intro">
+        <p>
+          This checker uses rules from <code>data/states/california.yaml</code>. It is a starting
+          point only—not a substitute for reading CSLB requirements for your trade and city.
+        </p>
+        <p>
+          A license is required if the job needs a permit, you hire workers, or labor and materials
+          combined reach the state threshold. {configResult.value.thresholdMeaning}
+        </p>
+        <p>TODO(user): add when to call CSLB or a lawyer for edge cases.</p>
+      </div>
+      <LicenseRequiredChecker slot="calculator" config={configResult.value} />
+      <div slot="formula">
+        <p>
+          License required if: building permit needed <strong>or</strong> workers hired{" "}
+          <strong>or</strong> total job value ≥ threshold (${configResult.value.thresholdUsd}{" "}
+          USD in our verified data, effective {configResult.value.effectiveDate}).
+        </p>
+      </div>
+      <div slot="example">
+        <p>
+          Job value $900, no permit, no workers: value is under $
+          {configResult.value.thresholdUsd}, so the minor-work exemption <em>may</em> apply if other
+          rules do not. Job value $1,000 with the same answers: license required because of the
+          threshold.
+        </p>
+      </div>
+    </ToolPage>
+  ) : (
+    <ToolPage
+      title="Do I need a license for this job? (California)"
+      description="California license checker unavailable until state data is verified."
+      toolPath={toolPath}
+      relatedTools={relatedToolsExcept(toolPath)}
+    >
+      <div slot="intro">
+        <p>This tool is unavailable: {configResult.error}</p>
+      </div>
+      <div slot="calculator">
+        <p>Fix the California data file or verify the threshold before publishing this tool.</p>
+      </div>
+      <div slot="formula">
+        <p>Needs confirmation</p>
+      </div>
+      <div slot="example">
+        <p>Needs confirmation</p>
+      </div>
+    </ToolPage>
+  )
+}

@@ -1,0 +1,11 @@
+---
+description: Always-on quality rules for the whole site.
+alwaysApply: true
+---
+
+- Never invent facts, fees, thresholds, authors or credentials. Missing data shows "Needs confirmation".
+- Ask before adding dependencies or third-party scripts.
+- Keep JavaScript minimal; content pages should work without it.
+- Run npm run validate:data, npm test and npm run build before finishing a task.
+- Plain English, short sentences, no hype.
+- Use Tailwind v4 utilities and the @theme tokens. No SCSS. No arbitrary color or size values.

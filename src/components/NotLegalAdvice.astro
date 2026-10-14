@@ -1,0 +1,25 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  /** Optional extra context; keep short. */
+  context?: string;
+  /** Optional layout classes (e.g. content-block spacing). */
+  class?: string;
+}
+
+const { context, class: className } = Astro.props;
+---
+
+<aside
+  class:list={["callout", "callout--legal", className]}
+  aria-label="Legal disclaimer"
+>
+  <Icon name="shield" class="callout__icon" />
+  <p class="callout__text">
+    This information is for general education only. It is not legal, tax, or financial advice.
+    Rules change. Check official sources and talk to a qualified professional before you rely on
+    this for a business decision.
+    {context ? ` ${context}` : ""}
+  </p>
+</aside>

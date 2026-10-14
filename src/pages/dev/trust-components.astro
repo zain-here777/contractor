@@ -1,0 +1,59 @@
+---
+/**
+ * Dev-only page to preview trust UI at ~375px width.
+ * Demo values are placeholders — not licensing facts.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import FactTable from "../../components/FactTable.astro";
+import NotLegalAdvice from "../../components/NotLegalAdvice.astro";
+import SourceBox from "../../components/SourceBox.astro";
+import VerifiedBadge from "../../components/VerifiedBadge.astro";
+
+const demoVerifiedOn = "2026-01-15";
+const demoSource = "https://example.gov/demo-page";
+---
+
+<BaseLayout
+  title="Trust components (dev test)"
+  description="Preview of source boxes, badges, fact tables, and legal disclaimer for development."
+  canonicalPath="/dev/trust-components/"
+>
+  <h1>Trust components test</h1>
+  <p>
+    Resize the browser to about 375px wide to check mobile layout. Data on this page is fake demo
+    content only.
+  </p>
+
+  <section aria-labelledby="badges-heading">
+    <h2 id="badges-heading">Verified badges</h2>
+    <p>
+      <VerifiedBadge confidence="primary" />
+    </p>
+    <p>
+      <VerifiedBadge confidence="confirm" />
+    </p>
+  </section>
+
+  <section aria-labelledby="facts-heading">
+    <h2 id="facts-heading">Fact table</h2>
+    <FactTable
+      caption="Demo facts (not real state data)"
+      rows={[
+        { label: "Sample threshold (USD)", value: 1000, confidence: "primary" },
+        { label: "Sample renewal fee (USD)", value: null, confidence: "confirm" },
+        { label: "Sample permit required", value: true, confidence: "primary" },
+        { label: "Sample note field", value: undefined, confidence: "primary" },
+      ]}
+    />
+  </section>
+
+  <SourceBox sources={demoSource} verifiedOn={demoVerifiedOn} />
+
+  <SourceBox
+    title="Multiple sources (demo)"
+    sources={[demoSource, "https://example.gov/second-source"]}
+    verifiedOn={demoVerifiedOn}
+  />
+
+  <NotLegalAdvice context="Demo page for layout review." />
+</BaseLayout>

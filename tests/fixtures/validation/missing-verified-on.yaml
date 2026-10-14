@@ -1,0 +1,6 @@
+state: Test
+state_code: TS
+sample_section:
+  threshold_usd: 1000
+  confidence: primary
+  source: https://example.gov/page

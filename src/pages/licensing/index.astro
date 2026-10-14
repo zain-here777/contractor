@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/PageHero.astro";
+import StateLicensingCard from "../../components/StateLicensingCard.astro";
+import { getStateSlugs } from "../../lib/state-data/load-states";
+import { join } from "node:path";
+
+const statesDir = join(process.cwd(), "data", "states");
+const slugs = getStateSlugs(statesDir);
+---
+
+<BaseLayout
+  title="State licensing"
+  description="California contractor licensing overview plus Florida partial draft. Official sources and last checked dates on each page."
+  canonicalPath="/licensing/"
+>
+  <PageHero
+    title="State licensing"
+    lead="California is available now. Florida is a partial draft—fees, bonds, and other facts only where confirmed from official sources."
+  />
+  <ul class="card-grid card-grid--3 state-card-grid content-block">
+    {
+      slugs.map((slug) => (
+        <li>
+          <StateLicensingCard slug={slug} />
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

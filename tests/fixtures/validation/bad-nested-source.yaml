@@ -1,0 +1,7 @@
+state: Test
+state_code: TS
+verified_on: 2026-01-15
+fees_usd:
+  confidence: primary
+  source: https://example.gov/fees
+  renewal_fee: { value: 450, confidence: primary, source: http://example.com/not-https }

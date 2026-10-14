@@ -1,0 +1,40 @@
+---
+interface Props {
+  title: string;
+  lead: string;
+  mapImageSrc: string;
+  mapImageAlt: string;
+  headingId?: string;
+}
+
+const { title, lead, mapImageSrc, mapImageAlt, headingId = "state-hero-heading" } =
+  Astro.props;
+const hasDefaultSlot = Astro.slots.has("default");
+---
+
+<section class="state-hero-band" aria-labelledby={headingId}>
+  <div class="state-hero-band__inner">
+    <div class="state-hero-band__copy">
+      <h1 id={headingId} class="state-hero-band__title">{title}</h1>
+      <p class="state-hero-band__lead">{lead}</p>
+      {
+        hasDefaultSlot && (
+          <div class="state-hero-band__meta">
+            <slot />
+          </div>
+        )
+      }
+    </div>
+    <div class="state-hero-band__visual">
+      <img
+        class="state-hero-band__map"
+        src={mapImageSrc}
+        alt={mapImageAlt}
+        width="400"
+        height="240"
+        loading="eager"
+        decoding="async"
+      />
+    </div>
+  </div>
+</section>

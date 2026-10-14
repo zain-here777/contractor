@@ -1,0 +1,27 @@
+---
+import {
+  EXTERNAL_LINK_REL,
+  EXTERNAL_LINK_TARGET,
+} from "../lib/links/external-url";
+import { formatSourceLinkLabel } from "../lib/state-data/source-labels";
+
+interface Props {
+  href: string;
+  label?: string;
+  class?: string;
+}
+
+const { href, label, class: className } = Astro.props;
+const text = label ?? formatSourceLinkLabel(href);
+---
+
+<a
+  class:list={["external-link", className]}
+  href={href}
+  target={EXTERNAL_LINK_TARGET}
+  rel={EXTERNAL_LINK_REL}
+  title={href}
+>
+  <span class="external-link__text">{text}</span>
+  <span class="sr-only"> (opens in new tab)</span>
+</a>

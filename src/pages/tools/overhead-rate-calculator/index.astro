@@ -1,0 +1,29 @@
+---
+import ToolPage from "../../../components/tools/ToolPage.astro";
+import OverheadRateCalculator from "../../../components/tools/OverheadRateCalculator.astro";
+import { relatedToolsExcept } from "../../../lib/tools/related-links";
+
+const toolPath = "/tools/overhead-rate-calculator/";
+---
+
+<ToolPage
+  title="Overhead rate calculator"
+  description="Spread yearly overhead across billable hours."
+  toolPath={toolPath}
+  relatedTools={relatedToolsExcept(toolPath)}
+>
+  <div slot="intro">
+    <p>
+      Overhead per hour shows how much of each billable hour must cover office costs, insurance,
+      vehicles, and other overhead.
+    </p>
+    <p>TODO(user): list the overhead categories you include in your own rate sheet.</p>
+  </div>
+  <OverheadRateCalculator slot="calculator" />
+  <div slot="formula">
+    <p>Overhead per hour = yearly overhead ÷ billable hours per year</p>
+  </div>
+  <div slot="example">
+    <p>Yearly overhead $40,000 ÷ 1,200 billable hours → about $33.33 overhead per hour.</p>
+  </div>
+</ToolPage>

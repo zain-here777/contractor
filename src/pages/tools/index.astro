@@ -1,0 +1,90 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/Icon.astro";
+import PageHero from "../../components/PageHero.astro";
+import type { IconName } from "../../components/Icon.astro";
+
+const tools: {
+  href: string;
+  title: string;
+  description: string;
+  icon: IconName;
+  featured?: boolean;
+}[] = [
+  {
+    href: "/tools/do-i-need-a-license/",
+    title: "Do I need a license for this job?",
+    description: "California CSLB threshold and permit checker from verified data.",
+    icon: "shield",
+    featured: true,
+  },
+  {
+    href: "/tools/markup-margin-calculator/",
+    title: "Markup vs margin calculator",
+    description: "Switch between markup and margin without mixing formulas.",
+    icon: "calculator",
+  },
+  {
+    href: "/tools/hourly-rate-calculator/",
+    title: "Hourly rate calculator",
+    description: "Billable rate from labor, overhead, and profit targets.",
+    icon: "calculator",
+  },
+  {
+    href: "/tools/break-even-calculator/",
+    title: "Break-even calculator",
+    description: "Revenue needed to cover fixed and variable costs.",
+    icon: "calculator",
+  },
+  {
+    href: "/tools/overhead-rate-calculator/",
+    title: "Overhead rate calculator",
+    description: "Turn monthly overhead into a load rate for estimates.",
+    icon: "calculator",
+  },
+];
+---
+
+<BaseLayout
+  title="Tools"
+  description="Free calculators for contractor pricing, hourly rates, overhead, and break-even estimates."
+  canonicalPath="/tools/"
+>
+  <PageHero
+    title="Tools"
+    lead="Plain calculators built on tested formulas. Estimates only—not tax, legal, or financial advice."
+  />
+  <ul class="card-grid card-grid--2 content-block">
+    {
+      tools.map((tool) => (
+        <li>
+          <a
+            class:list={[
+              "card",
+              "card--link",
+              "card--horizontal",
+              tool.featured && "card--featured",
+            ]}
+            href={tool.href}
+          >
+            <span class="card__icon-wrap card__icon-wrap--accent">
+              <Icon name={tool.icon} />
+            </span>
+            <span class="card__body">
+              {tool.featured && <span class="card__badge">Featured</span>}
+              <span class="card__title">{tool.title}</span>
+              <span class="card__text">{tool.description}</span>
+            </span>
+            <Icon name="arrow-right" class="card__chevron" />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="content-block">
+    <a class="btn btn-secondary btn--icon" href="/licensing/">
+      <Icon name="map-pin" />
+      <span>State licensing overviews</span>
+    </a>
+  </p>
+</BaseLayout>

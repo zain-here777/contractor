@@ -1,0 +1,9 @@
+---
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<div id={id} class="result-panel" aria-live="polite" aria-atomic="true" hidden></div>

@@ -1,0 +1,17 @@
+state: Nested Fee Example
+state_code: NE
+verified_on: 2026-01-15
+agency:
+  name: Example Agency
+  website: https://example.gov/licensing
+fees_usd:
+  current_fee_values:
+    value: null
+    confidence: confirm
+    source: https://example.gov/fees
+    note: "Fees not confirmed."
+  other_fee_leaf:
+    value: null
+    confidence: confirm
+    source: https://example.gov/fees-other
+    note: "Another unconfirmed leaf."
